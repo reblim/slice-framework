@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChangelogRouteImport } from './routes/changelog'
 import { Route as DecisionsRouteImport } from './routes/decisions'
 import { Route as AlphaPageRouteImport } from './routes/alpha.$page'
+import { Route as ResearchIndexRouteImport } from './routes/research.index'
 import { Route as ResearchPageRouteImport } from './routes/research.$page'
 import { Route as SpecIndexRouteImport } from './routes/spec.index'
 import { Route as SpecVersionRouteImport } from './routes/spec.$version'
@@ -35,6 +36,11 @@ const DecisionsRoute = DecisionsRouteImport.update({
 const AlphaPageRoute = AlphaPageRouteImport.update({
   id: '/alpha/$page',
   path: '/alpha/$page',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResearchIndexRoute = ResearchIndexRouteImport.update({
+  id: '/research/',
+  path: '/research/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResearchPageRoute = ResearchPageRouteImport.update({
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/alpha/$page': typeof AlphaPageRoute
   '/research/$page': typeof ResearchPageRoute
   '/spec/$version': typeof SpecVersionRoute
+  '/research/': typeof ResearchIndexRoute
   '/spec/': typeof SpecIndexRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/alpha/$page': typeof AlphaPageRoute
   '/research/$page': typeof ResearchPageRoute
   '/spec/$version': typeof SpecVersionRoute
+  '/research': typeof ResearchIndexRoute
   '/spec': typeof SpecIndexRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/alpha/$page': typeof AlphaPageRoute
   '/research/$page': typeof ResearchPageRoute
   '/spec/$version': typeof SpecVersionRoute
+  '/research/': typeof ResearchIndexRoute
   '/spec/': typeof SpecIndexRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/alpha/$page'
     | '/research/$page'
     | '/spec/$version'
+    | '/research/'
     | '/spec/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/alpha/$page'
     | '/research/$page'
     | '/spec/$version'
+    | '/research'
     | '/spec'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/alpha/$page'
     | '/research/$page'
     | '/spec/$version'
+    | '/research/'
     | '/spec/'
   fileRoutesById: FileRoutesById
 }
@@ -118,6 +130,7 @@ export interface RootRouteChildren {
   AlphaPageRoute: typeof AlphaPageRoute
   ResearchPageRoute: typeof ResearchPageRoute
   SpecVersionRoute: typeof SpecVersionRoute
+  ResearchIndexRoute: typeof ResearchIndexRoute
   SpecIndexRoute: typeof SpecIndexRoute
 }
 
@@ -151,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AlphaPageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/research/': {
+      id: '/research/'
+      path: '/research'
+      fullPath: '/research/'
+      preLoaderRoute: typeof ResearchIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/research/$page': {
       id: '/research/$page'
       path: '/research/$page'
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   AlphaPageRoute: AlphaPageRoute,
   ResearchPageRoute: ResearchPageRoute,
   SpecVersionRoute: SpecVersionRoute,
+  ResearchIndexRoute: ResearchIndexRoute,
   SpecIndexRoute: SpecIndexRoute,
 }
 export const routeTree = rootRouteImport
