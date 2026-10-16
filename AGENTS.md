@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Docs content is markdown under src/content, loaded eagerly via import.meta.glob in src/lib/content.ts; versions come from src/content/versions.json — keeps the site static with no backend.
+- Site name lives only in src/config.ts (SITE_NAME) so the framework can be renamed in one place.
