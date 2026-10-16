@@ -17,7 +17,8 @@ export function Home() {
           Read the spec
         </Link>
         <Link
-          to="/alpha/quick-start"
+          to="/alpha/$page"
+          params={{ page: "quick-start" }}
           className="inline-block rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
         >
           Quick Start
