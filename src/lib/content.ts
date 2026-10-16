@@ -29,9 +29,9 @@ export function getToc(md: string): TocItem[] {
     if (inFence) continue;
     const m = /^(#{1,6})\s+(.+?)\s*#*\s*$/.exec(line);
     if (!m) continue;
-    const text = m[2].replace(/[*_`]/g, "");
+    const text = m[2]!.replace(/[*_`]/g, "");
     const id = slugger.slug(text);
-    const depth = m[1].length;
+    const depth = m[1]!.length;
     if (depth === 2 || depth === 3) out.push({ depth, text, id });
   }
   return out;
