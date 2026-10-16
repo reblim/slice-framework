@@ -142,3 +142,32 @@
     color: var(--color-foreground);
   }
 }
+
+html { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+code, pre, kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+@utility icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2rem; height: 2rem; border-radius: var(--radius);
+  color: var(--muted-foreground); border: 1px solid var(--border);
+  &:hover { color: var(--foreground); background: var(--muted); }
+}
+
+.prose-doc { line-height: 1.7; max-width: 72ch; }
+.prose-doc h1 { font-size: 2rem; font-weight: 600; margin: 0 0 1rem; letter-spacing: -0.01em; }
+.prose-doc h2 { font-size: 1.4rem; font-weight: 600; margin: 2.2rem 0 0.75rem; scroll-margin-top: 4rem; }
+.prose-doc h3 { font-size: 1.1rem; font-weight: 600; margin: 1.6rem 0 0.5rem; scroll-margin-top: 4rem; }
+.prose-doc p, .prose-doc ul, .prose-doc ol, .prose-doc table, .prose-doc blockquote { margin: 0 0 1rem; }
+.prose-doc ul { list-style: disc; padding-left: 1.4rem; }
+.prose-doc ol { list-style: decimal; padding-left: 1.4rem; }
+.prose-doc ul.contains-task-list { list-style: none; padding-left: 0.2rem; }
+.prose-doc a { text-decoration: underline; text-underline-offset: 2px; }
+.prose-doc blockquote { border-left: 3px solid var(--border); padding-left: 1rem; color: var(--muted-foreground); }
+.prose-doc table { border-collapse: collapse; display: block; overflow-x: auto; }
+.prose-doc th, .prose-doc td { border: 1px solid var(--border); padding: 0.4rem 0.7rem; text-align: left; }
+.prose-doc th { background: var(--muted); }
+.prose-doc :not(pre) > code { background: var(--muted); padding: 0.1rem 0.3rem; border-radius: 4px; font-size: 0.9em; }
+.code-block { position: relative; margin: 0 0 1rem; }
+.code-block pre { overflow-x: auto; background: var(--muted); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; font-size: 0.875rem; line-height: 1.5; }
+.code-copy { position: absolute; top: 0.4rem; right: 0.4rem; padding: 0.35rem; border-radius: 6px; color: var(--muted-foreground); background: var(--background); border: 1px solid var(--border); }
+.code-copy:hover { color: var(--foreground); }

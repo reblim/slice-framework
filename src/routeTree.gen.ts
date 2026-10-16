@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ChangelogRouteImport } from './routes/changelog'
+import { Route as DecisionsRouteImport } from './routes/decisions'
+import { Route as AlphaPageRouteImport } from './routes/alpha.$page'
+import { Route as ResearchPageRouteImport } from './routes/research.$page'
+import { Route as SpecIndexRouteImport } from './routes/spec.index'
+import { Route as SpecVersionRouteImport } from './routes/spec.$version'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChangelogRoute = ChangelogRouteImport.update({
+  id: '/changelog',
+  path: '/changelog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DecisionsRoute = DecisionsRouteImport.update({
+  id: '/decisions',
+  path: '/decisions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlphaPageRoute = AlphaPageRouteImport.update({
+  id: '/alpha/$page',
+  path: '/alpha/$page',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResearchPageRoute = ResearchPageRouteImport.update({
+  id: '/research/$page',
+  path: '/research/$page',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpecIndexRoute = SpecIndexRouteImport.update({
+  id: '/spec/',
+  path: '/spec/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpecVersionRoute = SpecVersionRouteImport.update({
+  id: '/spec/$version',
+  path: '/spec/$version',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/changelog': typeof ChangelogRoute
+  '/decisions': typeof DecisionsRoute
+  '/alpha/$page': typeof AlphaPageRoute
+  '/research/$page': typeof ResearchPageRoute
+  '/spec/$version': typeof SpecVersionRoute
+  '/spec/': typeof SpecIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/changelog': typeof ChangelogRoute
+  '/decisions': typeof DecisionsRoute
+  '/alpha/$page': typeof AlphaPageRoute
+  '/research/$page': typeof ResearchPageRoute
+  '/spec/$version': typeof SpecVersionRoute
+  '/spec': typeof SpecIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/changelog': typeof ChangelogRoute
+  '/decisions': typeof DecisionsRoute
+  '/alpha/$page': typeof AlphaPageRoute
+  '/research/$page': typeof ResearchPageRoute
+  '/spec/$version': typeof SpecVersionRoute
+  '/spec/': typeof SpecIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/changelog'
+    | '/decisions'
+    | '/alpha/$page'
+    | '/research/$page'
+    | '/spec/$version'
+    | '/spec/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/changelog'
+    | '/decisions'
+    | '/alpha/$page'
+    | '/research/$page'
+    | '/spec/$version'
+    | '/spec'
+  id:
+    | '__root__'
+    | '/'
+    | '/changelog'
+    | '/decisions'
+    | '/alpha/$page'
+    | '/research/$page'
+    | '/spec/$version'
+    | '/spec/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ChangelogRoute: typeof ChangelogRoute
+  DecisionsRoute: typeof DecisionsRoute
+  AlphaPageRoute: typeof AlphaPageRoute
+  ResearchPageRoute: typeof ResearchPageRoute
+  SpecVersionRoute: typeof SpecVersionRoute
+  SpecIndexRoute: typeof SpecIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/changelog': {
+      id: '/changelog'
+      path: '/changelog'
+      fullPath: '/changelog'
+      preLoaderRoute: typeof ChangelogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/decisions': {
+      id: '/decisions'
+      path: '/decisions'
+      fullPath: '/decisions'
+      preLoaderRoute: typeof DecisionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/alpha/$page': {
+      id: '/alpha/$page'
+      path: '/alpha/$page'
+      fullPath: '/alpha/$page'
+      preLoaderRoute: typeof AlphaPageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/research/$page': {
+      id: '/research/$page'
+      path: '/research/$page'
+      fullPath: '/research/$page'
+      preLoaderRoute: typeof ResearchPageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/spec/': {
+      id: '/spec/'
+      path: '/spec'
+      fullPath: '/spec/'
+      preLoaderRoute: typeof SpecIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/spec/$version': {
+      id: '/spec/$version'
+      path: '/spec/$version'
+      fullPath: '/spec/$version'
+      preLoaderRoute: typeof SpecVersionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ChangelogRoute: ChangelogRoute,
+  DecisionsRoute: DecisionsRoute,
+  AlphaPageRoute: AlphaPageRoute,
+  ResearchPageRoute: ResearchPageRoute,
+  SpecVersionRoute: SpecVersionRoute,
+  SpecIndexRoute: SpecIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
