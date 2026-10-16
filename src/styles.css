@@ -171,3 +171,5 @@ code, pre, kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, mon
 .code-block pre { overflow-x: auto; background: var(--muted); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; font-size: 0.875rem; line-height: 1.5; }
 .code-copy { position: absolute; top: 0.4rem; right: 0.4rem; padding: 0.35rem; border-radius: 6px; color: var(--muted-foreground); background: var(--background); border: 1px solid var(--border); }
 .code-copy:hover { color: var(--foreground); }
+.math-display { margin: 0 0 1rem; overflow-x: auto; overflow-y: hidden; }
+
