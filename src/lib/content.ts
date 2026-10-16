@@ -3,7 +3,7 @@ import GithubSlugger from "github-slugger";
 
 export type Version = { id: string; label: string; status: "current" | "archived" };
 export const versions = versionsJson as Version[];
-export const currentVersion = versions.find((v) => v.status === "current") ?? versions[0];
+export const currentVersion: Version = versions.find((v) => v.status === "current") ?? versions[0]!;
 export const getVersion = (id: string) => versions.find((v) => v.id === id);
 
 const files = import.meta.glob("/src/content/**/*.md", {
