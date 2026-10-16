@@ -3,6 +3,7 @@ import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SITE_NAME } from "@/config";
 import { currentVersion } from "@/lib/content";
+import { Button } from "@/components/ui/button";
 
 function ThemeToggle() {
   const [dark, setDark] = useState(false);
@@ -19,9 +20,9 @@ function ThemeToggle() {
     localStorage.setItem("theme", d ? "dark" : "light");
   };
   return (
-    <button type="button" onClick={toggle} className="icon-btn" aria-label="Toggle theme">
+    <Button type="button" variant="outline" size="icon" onClick={toggle} className="shrink-0" aria-label="Toggle theme" title={dark ? "Switch to light mode" : "Switch to dark mode"}>
       {dark ? <Sun size={16} /> : <Moon size={16} />}
-    </button>
+    </Button>
   );
 }
 
@@ -30,11 +31,13 @@ export function SiteHeader() {
   return (
     <header className="border-b border-border">
       <div className="mx-auto flex h-14 max-w-6xl items-center gap-6 px-4">
-        <Link to="/" className="font-semibold tracking-wide text-foreground">{SITE_NAME}</Link>
-        <nav className="flex flex-1 items-center gap-4 overflow-x-auto text-sm">
+        <Link to="/" className="shrink-0 font-semibold tracking-wide text-foreground">{SITE_NAME}</Link>
+        <nav aria-label="Main navigation" className="flex min-w-0 flex-1 items-center gap-4 overflow-x-auto whitespace-nowrap text-sm">
           <Link to="/spec/$version" params={{ version: currentVersion.id }} className={nav}>Spec</Link>
+          <Link to="/alpha/$page" params={{ page: "start-here" }} className={nav}>Alpha kit</Link>
           <Link to="/changelog" className={nav}>Changelog</Link>
           <Link to="/decisions" className={nav}>Decisions</Link>
+          <Link to="/research" className={nav}>Research</Link>
         </nav>
         <ThemeToggle />
       </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { SITE_NAME } from "@/config";
 import { currentVersion, getDoc, getToc, getVersion, versions } from "@/lib/content";
 import { Markdown } from "@/components/Markdown";
+import { PageError, PageNotFound } from "@/components/PageStatus";
 
 export const Route = createFileRoute("/spec/$version")({
   loader: ({ params }) => {
@@ -22,13 +23,16 @@ export const Route = createFileRoute("/spec/$version")({
     ],
   }),
   component: SpecPage,
+  errorComponent: PageError,
+  notFoundComponent: PageNotFound,
 });
 
 function SpecPage() {
   const { version } = Route.useLoaderData();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const md = getDoc(`spec/${version.id}`)!;
+  const md = getDoc(`spec/${version.id}`);
+  if (md === undefined) return <PageNotFound />;
   const toc = getToc(md);
 
   const tocList = (
