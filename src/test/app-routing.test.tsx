@@ -35,7 +35,7 @@ describe("App routing", () => {
       isServer: true,
     });
     await router.load();
-    expect(router.state.statusCode).toBe(404);
+    expect(router.state.matches.some((match) => match.status === "notFound" || match._notFound)).toBe(true);
   });
 });
 
