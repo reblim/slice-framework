@@ -5,8 +5,7 @@ import { describe, expect, it } from "vitest";
 import { routeTree } from "@/routeTree.gen";
 import { documentsInFolder, listDocs } from "@/lib/content";
 
-// Match routes without running loaders or rendering: loaders may need a server or
-// network the test run lacks, and jsdom never loads the stylesheets React waits on.
+// Match navigation destinations directly and run static document guards without rendering.
 describe("App routing", () => {
   it("matches a page for / instead of falling back to not found", () => {
     const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
@@ -36,7 +35,7 @@ describe("App routing", () => {
       isServer: true,
     });
     await router.load();
-    expect(router.state.matches.some((match) => match.status === "notFound" || match.globalNotFound)).toBe(true);
+    expect(router.state.statusCode).toBe(404);
   });
 });
 
