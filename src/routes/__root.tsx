@@ -18,7 +18,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
-    <><SiteHeader /><PageNotFound /></>
+    <PageNotFound />
   );
 }
 
