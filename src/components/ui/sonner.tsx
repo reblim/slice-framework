@@ -1,11 +1,23 @@
+import { useEffect, useState } from "react";
 import { Toaster as Sonner } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  useEffect(() => {
+    const root = document.documentElement;
+    const read = () => setTheme(root.classList.contains("dark") ? "dark" : "light");
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
   return (
     <Sonner
-      className="toaster group"
+      theme={theme}
+      position="bottom-right"
+      className="toaster group slice-toaster"
       toastOptions={{
         classNames: {
           toast:
