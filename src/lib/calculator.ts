@@ -9,7 +9,7 @@ export type Slice = {
 };
 export type Scenario = { active: number; review: number; decision: number; external: number };
 export type Scenarios = Record<"Optimistic" | "Expected" | "Conservative", Scenario>;
-export type HistoryRow = { slice: string; size: string; work_type: string; mode: string; context: string; started: string; accepted: string; cycle: number; review?: number; decision?: number; ai_leverage?: string };
+export type HistoryRow = { slice: string; size: string; work_type: string; mode: string; context: string; started: string; accepted: string; cycle: number; review?: number | undefined; decision?: number | undefined; ai_leverage?: string | undefined };
 export type History = { rows: HistoryRow[]; columns: string[]; errors: string[]; invalid: number };
 export type Commitment = { type: "Direction" | "Target" | "Commitment"; when: string; decider: string; riskAccepted: boolean; outcomeLevel: "F0" | "F1"; criterion: string };
 export type Flow = { constraint: string; waiting: number; clears: number; wip: number; throughput: number };
@@ -31,8 +31,8 @@ export function parseHistory(csv: string): History {
   const errors = parsed.errors.filter((error) => error.type !== "FieldMismatch").map((error) => error.message);
   let invalid = 0;
   parsed.data.forEach((row, index) => {
-    const started = dateValue(row.started ?? "");
-    const accepted = dateValue(row.accepted ?? "");
+    const started = dateValue(row["started"] ?? "");
+    const accepted = dateValue(row["accepted"] ?? "");
     const numeric = (key: string) => row[key] === undefined || row[key] === "" ? undefined : Number(row[key]);
     const review = numeric("review_wait_hours");
     const decision = numeric("decision_latency_hours");
@@ -42,7 +42,7 @@ export function parseHistory(csv: string): History {
       errors.push(`Row ${index + 2}: use all required fields, valid YYYY-MM-DD dates (accepted on or after started), and nonnegative wait hours.`);
       return;
     }
-    rows.push({ slice: row.slice ?? "", size: row.size ?? "", work_type: row.work_type ?? "", mode: row.mode ?? "", context: row.context ?? "", started: row.started ?? "", accepted: row.accepted ?? "", cycle: Math.max(1, (accepted - started) / DAY), review, decision, ai_leverage: row.ai_leverage });
+    rows.push({ slice: row["slice"] ?? "", size: row["size"] ?? "", work_type: row["work_type"] ?? "", mode: row["mode"] ?? "", context: row["context"] ?? "", started: row["started"] ?? "", accepted: row["accepted"] ?? "", cycle: Math.max(1, (accepted - started) / DAY), review, decision, ai_leverage: row["ai_leverage"] });
   });
   return { rows, columns, errors, invalid };
 }
