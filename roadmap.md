@@ -1,5 +1,8 @@
 # Task roadmap
 
+- [ ] Rework calculator into empty-start, single-column steps with a sticky result bar and bottom results.
+- [ ] Add editable history, spreadsheet paste/upload, decimal-comma inputs and label help; verify unchanged rules.
+
 - [x] Restyle fonts, palette, articles and components without changing content.
 - [x] Add shared documentation shell, responsive navigation and version menu.
 - [x] Restyle Home and verify desktop/mobile, theme and document navigation.
