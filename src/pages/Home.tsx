@@ -1,32 +1,29 @@
 import { Link } from "@tanstack/react-router";
-import { SITE_NAME, TAGLINE } from "@/config";
-import { getDoc } from "@/lib/content";
+import { TAGLINE } from "@/config";
+import { currentVersion, getDoc } from "@/lib/content";
 import { Markdown } from "@/components/Markdown";
+import { Button } from "@/components/ui/button";
 
 export function Home() {
   const md = getDoc("alpha/start-here");
+  const firstSection = md?.search(/^##\s/m) ?? -1;
+  const opening = md?.split("\n").find((line) => line.startsWith("**")) ?? "";
   return (
-    <main className="mx-auto max-w-[72ch] px-4 py-20">
-      <h1 className="text-4xl font-semibold tracking-tight">{SITE_NAME}</h1>
-      <p className="mt-4 text-lg text-muted-foreground">{TAGLINE}</p>
+    <main className="home-page">
+      <p className="article-eyebrow">Public alpha · v{currentVersion.id}</p>
+      <h1 className="home-title">{TAGLINE}</h1>
+      <div className="home-lead"><Markdown source={opening} /></div>
       <div className="mt-8 flex flex-wrap items-center gap-3">
-        <Link
-          to="/spec"
-          className="inline-block rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
-        >
+        <Button asChild><Link to="/spec">
           Read the spec
-        </Link>
-        <Link
-          to="/alpha/$page"
-          params={{ page: "quick-start" }}
-          className="inline-block rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
-        >
+        </Link></Button>
+        <Button variant="outline" asChild><Link to="/alpha/$page" params={{ page: "quick-start" }}>
           Quick Start
-        </Link>
+        </Link></Button>
       </div>
       {md ? (
-        <div className="mt-14">
-          <Markdown source={md} />
+        <div className="home-article">
+          <Markdown source={firstSection >= 0 ? md.slice(firstSection) : md} />
         </div>
       ) : (
         <p className="mt-14 text-sm text-muted-foreground">
