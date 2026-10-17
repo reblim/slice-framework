@@ -35,12 +35,12 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
       <div className="header-inner">
         <div className="header-brand"><Link to="/" className="site-logo">{SITE_NAME}</Link><span className="alpha-badge">alpha</span></div>
         <nav aria-label="Main navigation" className="header-nav" data-path={pathname}>
+          <Link to="/alpha/$page" params={{ page: "start-here" }} className={nav}>Start here</Link>
           <Link to="/spec/$version" params={{ version: currentVersion.id }} className={nav}>Spec</Link>
-          <Link to="/calculator" className={nav}>Calculator</Link>
-          <Link to="/alpha/$page" params={{ page: "start-here" }} className={nav}>Alpha kit</Link>
-          <Link to="/changelog" className={nav}>Changelog</Link>
-          <Link to="/decisions" className={nav}>Decisions</Link>
+          <Link to="/alpha/$page" params={{ page: "quick-start" }} className={nav}>Alpha kit</Link>
           <Link to="/research" className={nav}>Research</Link>
+          <DropdownMenu><DropdownMenuTrigger className={`${nav} inline-flex items-center gap-1`}>History<ChevronDown size={14} /></DropdownMenuTrigger><DropdownMenuContent align="start"><DropdownMenuItem asChild><Link to="/changelog">Changelog</Link></DropdownMenuItem><DropdownMenuItem asChild><Link to="/decisions">Decisions</Link></DropdownMenuItem></DropdownMenuContent></DropdownMenu>
+          <Link to="/calculator" className={nav}>Calculator</Link>
         </nav>
         <div className="header-tools"><Button variant="ghost" size="icon" className="header-icon lg:hidden" aria-label="Open navigation" title="Open navigation" onClick={onMenu}><Menu size={16} /></Button><ThemeToggle /></div>
       </div>
