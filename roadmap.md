@@ -1,19 +1,10 @@
-# Task roadmap
+# Roadmap
 
-- [x] Rework calculator into empty-start, single-column steps with a sticky result bar and bottom results.
-- [x] Add editable history, spreadsheet paste/upload, decimal-comma inputs and label help; verify unchanged rules.
-
-- [x] Restyle fonts, palette, articles and components without changing content.
-- [x] Add shared documentation shell, responsive navigation and version menu.
-- [x] Restyle Home and verify desktop/mobile, theme and document navigation.
-- [ ] Add GitHub links once the repository URL is supplied (blocked: URL missing).
-
-- [x] Add the Forecast calculator input steps and measured-history logic.
-- [x] Add delivery, commitment, time, flow, verification and slice-card results.
-- [x] Link the calculator after Spec and verify rules and desktop/mobile flows.
-
-- [x] Preserve the existing Changelog and Decisions markdown pages.
-- [x] Add the Research index and document discovery.
-- [x] Update shared navigation while preserving theme and spec version controls.
-- [x] Show a home-linked 404 for unknown URLs and missing documents.
-- [x] Verify navigation, tables, empty Research, 404s, and version switching.
+- [ ] Quick estimate tab: pure logic module (ranges, totals, building share)
+- [ ] Quick estimate tab: UI (one column, 5 questions, adjustable ranges in localStorage, result, continue-to-full)
+- [ ] Full tab rework: placeholders, mode meanings, acceptance checkboxes, When/Decider selects, outcome sentence, integer steppers, gated flow result, "no major change"
+- [ ] Both tabs: empty start (no warnings until touched), "Try example: authentication" + Reset, last tab in localStorage
+- [ ] Header order: Start here · Spec · Alpha kit · Research · History (dropdown) · Calculator
+- [ ] Replace example data with authentication example; remove "Invite teammates" content
+- [ ] Tests: quick-estimate rules + updated example expectations; run suite
+- [ ] Verify in browser: empty tabs clean, examples match brief, prefill carry-over, 375px layout
