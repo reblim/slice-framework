@@ -8,6 +8,7 @@ authors:
   - family-names: "Ferreira"
     given-names: "Milber"
 repository-code: "https://github.com/reblim/slice-framework"
+url: "https://sliceframework.org"
 license: CC-BY-4.0
 abstract: >-
   An open framework for planning, estimating and shipping software when AI

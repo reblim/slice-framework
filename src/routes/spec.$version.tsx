@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { SITE_NAME } from "@/config";
+import { SITE_NAME, canonicalUrl } from "@/config";
 import { currentVersion, getDoc, getVersion } from "@/lib/content";
 import { Markdown } from "@/components/Markdown";
 import { PageError, PageNotFound } from "@/components/PageStatus";
@@ -10,16 +10,20 @@ export const Route = createFileRoute("/spec/$version")({
     if (!v || getDoc(`spec/${v.id}`) === undefined) throw notFound();
     return { version: v };
   },
-  head: ({ params }) => ({
-    meta: [
-      { title: `${SITE_NAME} spec v${params.version}` },
-      { name: "description", content: `${SITE_NAME} specification, version ${params.version}.` },
-      { property: "og:title", content: `${SITE_NAME} spec v${params.version}` },
-      { property: "og:description", content: `${SITE_NAME} specification, version ${params.version}.` },
-      { property: "og:type", content: "article" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
+  head: ({ params }) => {
+    const url = canonicalUrl(`/spec/${params.version}`);
+    return {
+      meta: [
+        { title: `${SITE_NAME} spec v${params.version}` },
+        { name: "description", content: `${SITE_NAME} specification, version ${params.version}.` },
+        { property: "og:title", content: `${SITE_NAME} spec v${params.version}` },
+        { property: "og:description", content: `${SITE_NAME} specification, version ${params.version}.` },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   component: SpecPage,
   errorComponent: PageError,
   notFoundComponent: PageNotFound,

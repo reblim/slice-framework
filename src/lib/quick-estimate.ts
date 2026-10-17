@@ -135,7 +135,7 @@ export function quickScenarios(result: Extract<QuickResult, { kind: "ready" }>) 
     decision: pick(result.parts[2]!.range),
     external: pick(result.parts[3]!.range),
   });
-  return { Optimistic: column((range) => range.low), Expected: column(midpoint), Conservative: column((range) => range.high) };
+  return { "Best case": column((range) => range.low), Likely: column(midpoint), "Worst case": column((range) => range.high) };
 }
 
 const STORAGE_KEY = "slice-calculator-quick-ranges";

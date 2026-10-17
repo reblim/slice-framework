@@ -1,7 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { SITE_NAME } from "@/config";
+import { SITE_NAME, canonicalUrl } from "@/config";
 import { DocPage } from "@/components/DocPage";
-import { getDoc } from "@/lib/content";
+import { documentHeading, firstBoldSentence, getDoc } from "@/lib/content";
 import { PageNotFound } from "@/components/PageStatus";
 
 export const Route = createFileRoute("/research/$page")({
@@ -9,15 +9,22 @@ export const Route = createFileRoute("/research/$page")({
     if (getDoc(`research/${params.page}`) === undefined) throw notFound();
   },
   notFoundComponent: PageNotFound,
-  head: ({ params }) => ({
-    meta: [
-      { title: `${params.page} · Research · ${SITE_NAME}` },
-      { name: "description", content: `${SITE_NAME} research: ${params.page}.` },
-      { property: "og:title", content: `${params.page} · Research · ${SITE_NAME}` },
-      { property: "og:description", content: `${SITE_NAME} research: ${params.page}.` },
-      { property: "og:type", content: "article" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
+  head: ({ params }) => {
+    const source = getDoc(`research/${params.page}`) ?? "";
+    const title = `${documentHeading(source)} · ${SITE_NAME}`;
+    const description = firstBoldSentence(source);
+    const url = canonicalUrl(`/research/${params.page}`);
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   component: () => <DocPage path={`research/${Route.useParams().page}`} />,
 });

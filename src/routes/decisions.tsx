@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SITE_NAME } from "@/config";
+import { SITE_NAME, canonicalUrl } from "@/config";
 import { DocPage } from "@/components/DocPage";
+
+const url = canonicalUrl("/decisions");
 
 export const Route = createFileRoute("/decisions")({
   head: () => ({
@@ -10,8 +12,9 @@ export const Route = createFileRoute("/decisions")({
       { property: "og:title", content: `Decisions · ${SITE_NAME}` },
       { property: "og:description", content: `Recorded design decisions for ${SITE_NAME}.` },
       { property: "og:type", content: "article" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:url", content: url },
     ],
+    links: [{ rel: "canonical", href: url }],
   }),
   component: () => <DocPage path="decisions" />,
 });

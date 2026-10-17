@@ -21,7 +21,7 @@ export const help: Record<string, string> = {
   "Last major change": "Your last big change in team, AI tools or codebase. Slices before it are ignored because they no longer predict.",
   "Also match on AI leverage": "Only compare with slices that had the same AI leverage.",
   "Commitment type": "Direction: we intend to, no date promised. Target: our planned date; it may move. Commitment: a promised date; needs F2, or the decider accepting the risk in writing.",
-  "When": "How the date is shown outside the team, e.g. 'Nov' or 'Q1'.",
+  "When": "How the date is shown outside the team, e.g. 'November 2026' or 'Q1 2027'.",
   "Decider": "The one person who makes the call on this item.",
   "Decider accepts F1 risk": "Needed to promise a date without measured history.",
   "Outcome forecast and criterion": "Whether it will work, kept separate from when it ships. Write something you can count: 'continue if 8 of the first 30 users do X'.",

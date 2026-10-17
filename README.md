@@ -6,6 +6,8 @@ AI made building fast. Reviewing, testing and deciding didn't speed up. SLICE is
 
 > **Status: public alpha (v0.3.2).** Open for testing, criticism and refinement. SLICE is not a proven framework, an industry standard or a successor to Scrum. It is not affiliated with SliceOps.
 
+**Website:** https://sliceframework.org
+
 ## Why SLICE exists
 
 AI tools can now build in a day what used to take two weeks. The rest of the work did not speed up: reviewing and testing the code, deciding what exactly to build, and waiting on people outside the team. An authentication module that once took 3–4 weeks now takes 1–3 weeks, not one day.
@@ -34,13 +36,13 @@ When implementation stops being the slowest step, delivery is limited by decidin
 
 | If you want to | Read |
 | --- | --- |
-| Understand SLICE in five minutes | [Start here](src/content/alpha/start-here.md) |
-| Estimate one feature in a minute | [Quick estimate, specification section 8.8](src/content/spec/0.3.2.md) |
-| Try it on real work in 20 minutes | [Quick Start](src/content/alpha/quick-start.md) |
-| Copy the three records | [Templates](src/content/alpha/templates.md) |
-| Read the full specification | [Specification v0.3.2](src/content/spec/0.3.2.md) |
-| Join or run a pilot | [Pilot protocol](src/content/alpha/pilot-protocol.md) |
-| See how SLICE evolved | [Changelog](src/content/changelog.md) · [Decisions](src/content/decisions.md) · [Research](src/content/research/) |
+| Understand SLICE in five minutes | [Start here](https://sliceframework.org/alpha/start-here) |
+| Estimate one feature in a minute | [Quick estimate, specification section 8.8](https://sliceframework.org/spec/0.3.2#88-quick-estimate-informative) |
+| Try it on real work in 20 minutes | [Quick Start](https://sliceframework.org/alpha/quick-start) |
+| Copy the three records | [Templates](https://sliceframework.org/alpha/templates) |
+| Read the full specification | [Specification v0.3.2](https://sliceframework.org/spec/0.3.2) |
+| Join or run a pilot | [Pilot protocol](https://sliceframework.org/alpha/pilot-protocol) |
+| See how SLICE evolved | [Changelog](https://sliceframework.org/changelog) · [Decisions](https://sliceframework.org/decisions) · [Research](https://sliceframework.org/research) |
 
 Earlier versions of the specification ([v0.3.1](src/content/spec/0.3.1.md), [v0.3](src/content/spec/0.3.md), [v0.2](src/content/spec/0.2.md), [v0.1](src/content/spec/0.1.md)) are kept unchanged so the evolution stays visible.
 

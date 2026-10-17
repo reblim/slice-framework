@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SITE_NAME } from "@/config";
+import { SITE_NAME, canonicalUrl } from "@/config";
 import { DocPage } from "@/components/DocPage";
+
+const url = canonicalUrl("/changelog");
 
 export const Route = createFileRoute("/changelog")({
   head: () => ({
@@ -10,8 +12,9 @@ export const Route = createFileRoute("/changelog")({
       { property: "og:title", content: `Changelog · ${SITE_NAME}` },
       { property: "og:description", content: `Changes across ${SITE_NAME} versions.` },
       { property: "og:type", content: "article" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:url", content: url },
     ],
+    links: [{ rel: "canonical", href: url }],
   }),
   component: () => <DocPage path="changelog" />,
 });

@@ -3,7 +3,7 @@ import { dateValue, EXAMPLE_COMMITMENT, EXAMPLE_SLICE, type HistoryRow, type Sce
 
 export const EMPTY_SLICE = { ...EXAMPLE_SLICE, title: "", item: "", acceptance: "" };
 export const EMPTY_COMMITMENT = { ...EXAMPLE_COMMITMENT, decider: "", criterion: "", outcomeLevel: "F0" as const };
-export const EMPTY_SCENARIOS: Scenarios = { Optimistic: { active: 0, review: 0, decision: 0, external: 0 }, Expected: { active: 0, review: 0, decision: 0, external: 0 }, Conservative: { active: 0, review: 0, decision: 0, external: 0 } };
+export const EMPTY_SCENARIOS: Scenarios = { "Best case": { active: 0, review: 0, decision: 0, external: 0 }, Likely: { active: 0, review: 0, decision: 0, external: 0 }, "Worst case": { active: 0, review: 0, decision: 0, external: 0 } };
 export const EMPTY_FLOW: Flow = { constraint: "Verification", waiting: 0, clears: 0, wip: 0, throughput: 0 };
 export function decimalNumber(raw: string) { return Math.max(0, Number(raw.trim().replace(",", ".")) || 0); }
 export const HISTORY_COLUMNS = ["slice", "size", "work_type", "mode", "context", "started", "accepted", "review_wait_hours", "decision_latency_hours"] as const;

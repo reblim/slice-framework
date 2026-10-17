@@ -46,23 +46,23 @@ describe("Measured slice evidence", () => {
 
 describe("Judgment and recorded waits", () => {
   it("totals all four working-day components", () => expect(total({ active: 4, review: 2, decision: 1, external: 3 })).toBe(10));
-  it("detects out-of-order scenario totals", () => expect(scenarioOrderValid({ ...EXAMPLE_SCENARIOS, Optimistic: { active: 100, review: 0, decision: 0, external: 0 } })).toBe(false));
+  it("detects out-of-order scenario totals", () => expect(scenarioOrderValid({ ...EXAMPLE_SCENARIOS, "Best case": { active: 100, review: 0, decision: 0, external: 0 } })).toBe(false));
   it("does not scale forecasts by AI leverage", () => {
     const low = comparableHistory(history, { ...EXAMPLE_SLICE, leverage: "Low" }, sample.lastChange, false);
     expect(deliveryForecast("F2", low.comparable, EXAMPLE_SCENARIOS)).toBe(deliveryForecast("F2", matching.comparable, EXAMPLE_SCENARIOS));
   });
   it("sums recorded wait hours as calendar days at F2", () => {
-    const values = timeBreakdown("F2", matching.comparable, EXAMPLE_SCENARIOS.Expected, history.columns);
+    const values = timeBreakdown("F2", matching.comparable, EXAMPLE_SCENARIOS.Likely, history.columns);
     expect(values.segments[0]?.value).toBeCloseTo(306 / 24);
     expect(values.segments[1]?.value).toBeCloseTo(116 / 24);
     expect(values.segments[2]?.value).toBeCloseTo(97 - 422 / 24);
     expect(values.decisionPercent).toBeCloseTo(116 / 24 / 97 * 100);
   });
-  it("uses the Expected scenario at F1", () => expect(timeBreakdown("F1", [], EXAMPLE_SCENARIOS.Expected, []).segments.map((segment) => segment.value)).toEqual([4, 2, 1, 0]));
+  it("uses the Likely scenario at F1", () => expect(timeBreakdown("F1", [], EXAMPLE_SCENARIOS.Likely, []).segments.map((segment) => segment.value)).toEqual([4, 2, 1, 0]));
   it("identifies decision wait at exactly twenty percent", () => expect(timeBreakdown("F1", [], { active: 4, review: 0, decision: 1, external: 0 }, []).decisionPercent).toBe(20));
   it("reports missing wait evidence instead of silently implying zero", () => {
     const input = parseHistory(`${header}\nA,M,ui,1,established,2026-07-01,2026-07-02`);
-    expect(timeBreakdown("F2", input.rows, EXAMPLE_SCENARIOS.Expected, input.columns).missing).toEqual(["review_wait_hours", "decision_latency_hours"]);
+    expect(timeBreakdown("F2", input.rows, EXAMPLE_SCENARIOS.Likely, input.columns).missing).toEqual(["review_wait_hours", "decision_latency_hours"]);
   });
 });
 

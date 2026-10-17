@@ -23,9 +23,9 @@ describe("Quick estimate", () => {
     const result = quickResult(QUICK_EXAMPLE, NO_OVERRIDES);
     if (result.kind !== "ready") throw new Error("expected ready");
     expect(quickScenarios(result)).toEqual({
-      Optimistic: { active: 0.5, review: 2, decision: 1, external: 0 },
-      Expected: { active: 1, review: 3.5, decision: 2, external: 0 },
-      Conservative: { active: 1.5, review: 5, decision: 3, external: 0 },
+      "Best case": { active: 0.5, review: 2, decision: 1, external: 0 },
+      Likely: { active: 1, review: 3.5, decision: 2, external: 0 },
+      "Worst case": { active: 1.5, review: 5, decision: 3, external: 0 },
     });
   });
   it("rounds the live window up to weekdays", () => {

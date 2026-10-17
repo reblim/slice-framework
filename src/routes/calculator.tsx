@@ -1,15 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Calculator } from "@/components/calculator/Calculator";
-import { SITE_NAME } from "@/config";
+import { SITE_NAME, canonicalUrl } from "@/config";
+
+const title = `Calculator · ${SITE_NAME}`;
+const description = "Estimate a feature in one minute: AI build time plus review, decisions and waiting. Or forecast from your team's own history.";
+const url = canonicalUrl("/calculator");
 
 export const Route = createFileRoute("/calculator")({
-  head: () => ({ meta: [
-    { title: `Forecast calculator · ${SITE_NAME}` },
-    { name: "description", content: `Forecast delivery from comparable slice history and judgment scenarios, and check commitments, verification and flow with ${SITE_NAME}.` },
-    { property: "og:title", content: `Forecast calculator · ${SITE_NAME}` },
-    { property: "og:description", content: `Evidence-led slice forecasts, commitment labels, verification and flow checks for the ${SITE_NAME} public alpha.` },
-    { property: "og:type", content: "website" },
-    { name: "twitter:card", content: "summary" },
-  ] }),
+  head: () => ({
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: url },
+    ],
+    links: [{ rel: "canonical", href: url }],
+  }),
   component: Calculator,
 });

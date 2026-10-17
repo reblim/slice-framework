@@ -8,7 +8,7 @@ export type Slice = {
   mode: Mode; size: string; workType: string; context: string; risk: Risk; leverage: Risk; acceptance: string;
 };
 export type Scenario = { active: number; review: number; decision: number; external: number };
-export type Scenarios = Record<"Optimistic" | "Expected" | "Conservative", Scenario>;
+export type Scenarios = Record<"Best case" | "Likely" | "Worst case", Scenario>;
 export type HistoryRow = { slice: string; size: string; work_type: string; mode: string; context: string; started: string; accepted: string; cycle: number; review?: number | undefined; decision?: number | undefined; ai_leverage?: string | undefined };
 export type History = { rows: HistoryRow[]; columns: string[]; errors: string[]; invalid: number };
 export type Commitment = { type: "Direction" | "Target" | "Commitment"; when: string; decider: string; riskAccepted: boolean; outcomeLevel: "F0" | "F1"; criterion: string };
@@ -62,11 +62,11 @@ export function comparableHistory(history: History, slice: Slice, lastChange: st
 }
 export const evidenceLevel = (acceptance: string, count: number): Level => !acceptance.trim() ? "F0" : count >= 7 ? "F2" : "F1";
 export const total = (scenario: Scenario) => scenario.active + scenario.review + scenario.decision + scenario.external;
-export const scenarioOrderValid = (scenarios: Scenarios) => total(scenarios.Optimistic) <= total(scenarios.Expected) && total(scenarios.Expected) <= total(scenarios.Conservative);
+export const scenarioOrderValid = (scenarios: Scenarios) => total(scenarios["Best case"]) <= total(scenarios.Likely) && total(scenarios.Likely) <= total(scenarios["Worst case"]);
 export const formatNumber = (value: number) => Number.isInteger(value) ? String(value) : value.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
 export function deliveryForecast(level: Level, rows: HistoryRow[], scenarios: Scenarios) {
   if (level === "F0") return "Not estimated. Define acceptance evidence first.";
-  if (level === "F1") return `${formatNumber(total(scenarios.Optimistic))}–${formatNumber(total(scenarios.Conservative))} working days`;
+  if (level === "F1") return `${formatNumber(total(scenarios["Best case"]))}–${formatNumber(total(scenarios["Worst case"]))} working days`;
   const times = rows.map((row) => row.cycle);
   return `${Math.min(...times)}–${Math.max(...times)} days`;
 }
@@ -127,7 +127,7 @@ export function sliceCard(slice: Slice, commitment: Commitment, level: Level, ro
   const risk = effectiveRisk(slice);
   const scalar = (value: string) => JSON.stringify(value);
   const forecast = `${level}${level === "F2" ? ` (n=${rows.length})` : ""} · ${deliveryForecast(level, rows, scenarios)}${level === "F1" ? " · scenarios, not probabilities" : ""}`;
-  return `---\nid: SL-NEW\nroadmap_item: ${scalar(slice.item)}\ntitle: ${scalar(slice.title)}\nmode: ${scalar(slice.mode)}\nsize: ${slice.size}\nwork_type: ${slice.workType}\nforecast: ${scalar(forecast)}\nrisk: ${risk}\nai_leverage: ${slice.leverage}\nevidence_level: ${level}\nstate: ready\n---\n## Acceptance evidence\n${slice.acceptance}\n\n## Verification tier and reviewer\n${risk}: ${verification[risk]}\nReviewer: to be assigned\n\n## Forecast basis (reference class, range or scenarios, assumptions, external label)\nReference class: ${slice.size} / ${slice.workType} / Mode ${slice.mode} / ${slice.context}\n${forecast}\n${level === "F1" ? `Optimistic: ${total(scenarios.Optimistic)}; Expected: ${total(scenarios.Expected)}; Conservative: ${total(scenarios.Conservative)} working days\n` : ""}Assumptions: ${assumptions}\nExternal label: ${externalLabel(slice, commitment, level, rows.length)}${slice.itemType === "Bet" ? `\n${joinedLabel(["Outcome", slice.item, commitment.outcomeLevel, commitment.criterion])}\nDelivery and outcome are never merged into one confidence figure.` : ""}`;
+  return `---\nid: SL-NEW\nroadmap_item: ${scalar(slice.item)}\ntitle: ${scalar(slice.title)}\nmode: ${scalar(slice.mode)}\nsize: ${slice.size}\nwork_type: ${slice.workType}\nforecast: ${scalar(forecast)}\nrisk: ${risk}\nai_leverage: ${slice.leverage}\nevidence_level: ${level}\nstate: ready\n---\n## Acceptance evidence\n${slice.acceptance}\n\n## Verification tier and reviewer\n${risk}: ${verification[risk]}\nReviewer: to be assigned\n\n## Forecast basis (reference class, range or scenarios, assumptions, external label)\nReference class: ${slice.size} / ${slice.workType} / Mode ${slice.mode} / ${slice.context}\n${forecast}\n${level === "F1" ? `Best case: ${total(scenarios["Best case"])}; Likely: ${total(scenarios.Likely)}; Worst case: ${total(scenarios["Worst case"])} working days\n` : ""}Assumptions: ${assumptions}\nExternal label: ${externalLabel(slice, commitment, level, rows.length)}${slice.itemType === "Bet" ? `\n${joinedLabel(["Outcome", slice.item, commitment.outcomeLevel, commitment.criterion])}\nDelivery and outcome are never merged into one confidence figure.` : ""}`;
 }
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -187,7 +187,7 @@ export function exampleHistory(today: Date): { csv: string; lastChange: string }
 
 export const EXAMPLE_EVIDENCE = ["Automated tests pass", "Independent security review", "Works in staging"];
 export const EXAMPLE_SLICE: Slice = { item: "User accounts", itemType: "Obligation", title: "Email and password sign-in with a managed auth provider", mode: "3", size: "M", workType: "integration", context: "established", risk: "High", leverage: "High", acceptance: EXAMPLE_EVIDENCE.join("; ") };
-export const EXAMPLE_SCENARIOS: Scenarios = { Optimistic: { active: 2, review: 1, decision: 0, external: 0 }, Expected: { active: 4, review: 2, decision: 1, external: 0 }, Conservative: { active: 6, review: 3, decision: 2, external: 1 } };
+export const EXAMPLE_SCENARIOS: Scenarios = { "Best case": { active: 2, review: 1, decision: 0, external: 0 }, Likely: { active: 4, review: 2, decision: 1, external: 0 }, "Worst case": { active: 6, review: 3, decision: 2, external: 1 } };
 export const EXAMPLE_COMMITMENT: Commitment = { type: "Target", when: "", decider: "Tech lead", riskAccepted: false, outcomeLevel: "F1", criterion: "" };
 export function exampleCommitment(today: Date): Commitment {
   return { ...EXAMPLE_COMMITMENT, when: monthAfter(today) };

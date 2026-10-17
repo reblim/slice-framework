@@ -5,3 +5,8 @@ export const LEAD =
 export const TAGLINE = "Decide deliberately. Build small. Count only what is proven.";
 export const DESCRIPTION =
   "SLICE is an open framework for planning, estimating and shipping software when AI writes the code. Public alpha.";
+export const SITE_ORIGIN = "https://sliceframework.org";
+
+export function canonicalUrl(path: string) {
+  return `${SITE_ORIGIN}${path.startsWith("/") ? path : `/${path}`}`;
+}

@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { SITE_NAME } from "@/config";
+import { SITE_NAME, canonicalUrl } from "@/config";
 import { getDoc, researchCard } from "@/lib/content";
 import { SIDEBAR_LABELS } from "@/lib/nav";
+
+const url = canonicalUrl("/research");
 
 export const Route = createFileRoute("/research/")({
   head: () => ({
@@ -11,8 +13,9 @@ export const Route = createFileRoute("/research/")({
       { property: "og:title", content: `Research · ${SITE_NAME}` },
       { property: "og:description", content: `Research documents for ${SITE_NAME}.` },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:url", content: url },
     ],
+    links: [{ rel: "canonical", href: url }],
   }),
   component: ResearchIndex,
 });

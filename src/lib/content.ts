@@ -17,6 +17,59 @@ export function getDoc(path: string): string | undefined {
   return files[`/src/content/${path}.md`];
 }
 
+const DESCRIPTION_LIMIT = 160;
+
+function visibleMarkdown(source: string): string {
+  let fence: string | undefined;
+  const visible: string[] = [];
+  for (const line of source.split("\n")) {
+    const marker = /^\s{0,3}(`{3,}|~{3,})/.exec(line)?.[1];
+    if (marker) {
+      if (!fence) fence = marker;
+      else if (marker[0] === fence[0] && marker.length >= fence.length) fence = undefined;
+      continue;
+    }
+    if (!fence) visible.push(line);
+  }
+  return visible.join("\n");
+}
+
+function plainText(value: string): string {
+  return value.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/[*_`]/g, "").replace(/\s+/g, " ").trim();
+}
+
+/** First heading outside fenced code. The URL slug is never used as a title. */
+export function documentHeading(source: string): string {
+  let fence: string | undefined;
+  let previous = "";
+  for (const line of source.split("\n")) {
+    const marker = /^\s{0,3}(`{3,}|~{3,})/.exec(line)?.[1];
+    if (marker) {
+      if (!fence) fence = marker;
+      else if (marker[0] === fence[0] && marker.length >= fence.length) fence = undefined;
+      previous = "";
+      continue;
+    }
+    if (fence) continue;
+    const heading = /^\s{0,3}#{1,6}\s+(.+?)\s*#*\s*$/.exec(line)?.[1];
+    const title = heading ?? (/^\s{0,3}(?:=+|-+)\s*$/.test(line) && previous.trim() ? previous.trim() : undefined);
+    if (title) return plainText(title);
+    previous = line;
+  }
+  return "";
+}
+
+/** First bold span that is a sentence, with Markdown removed and capped at 160 characters. */
+export function firstBoldSentence(source: string): string {
+  const pattern = /\*\*([^*]+)\*\*/g;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(visibleMarkdown(source)))) {
+    const sentence = plainText(match[1]!);
+    if (/[.!?]$/.test(sentence)) return sentence.slice(0, DESCRIPTION_LIMIT).trimEnd();
+  }
+  return "";
+}
+
 /** Discover direct markdown children without maintaining a second content registry. */
 export function listDocs(folder: string): { page: string; title: string }[] {
   return documentsInFolder(files, folder);
