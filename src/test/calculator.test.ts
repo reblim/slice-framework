@@ -22,7 +22,7 @@ describe("Measured slice evidence", () => {
     expect(parseHistory(`${header}\nA,M,ui,1,established,2026-07-01,2026-07-01`).rows[0]?.cycle).toBe(1);
   });
   it("includes starts exactly on the major change date", () => {
-    const input = parseHistory(`${header}\nA,M,ui,1,established,2026-07-01,2026-07-02`);
+    const input = parseHistory(`${header}\nA,M,integration,3,established,2026-07-01,2026-07-02`);
     expect(comparableHistory(input, EXAMPLE_SLICE, "2026-07-01", false).comparable).toHaveLength(1);
   });
   it.each(["size", "work_type", "mode", "context"] as const)("requires a match on %s", (key) => {
@@ -31,7 +31,7 @@ describe("Measured slice evidence", () => {
     expect(comparableHistory({ ...history, rows: [{ ...row, [key]: "different" }] }, EXAMPLE_SLICE, "2026-07-01", false).otherClass).toBe(1);
   });
   it("matches leverage only when the column exists and the checkbox is enabled", () => {
-    const input = parseHistory(`${header},ai_leverage\nA,M,ui,1,established,2026-07-01,2026-07-02,Low`);
+    const input = parseHistory(`${header},ai_leverage\nA,M,integration,3,established,2026-07-01,2026-07-02,Low`);
     expect(comparableHistory(input, EXAMPLE_SLICE, "2026-07-01", true).comparable).toHaveLength(0);
     expect(comparableHistory(input, EXAMPLE_SLICE, "2026-07-01", false).comparable).toHaveLength(1);
   });
@@ -52,10 +52,10 @@ describe("Judgment and recorded waits", () => {
   });
   it("sums recorded wait hours as calendar days at F2", () => {
     const values = timeBreakdown("F2", matching.comparable, EXAMPLE_SCENARIOS.Expected, history.columns);
-    expect(values.segments[0]?.value).toBeCloseTo(284 / 24);
-    expect(values.segments[1]?.value).toBeCloseTo(102 / 24);
-    expect(values.segments[2]?.value).toBeCloseTo(87 - 386 / 24);
-    expect(values.decisionPercent).toBeCloseTo(102 / 24 / 87 * 100);
+    expect(values.segments[0]?.value).toBeCloseTo(306 / 24);
+    expect(values.segments[1]?.value).toBeCloseTo(116 / 24);
+    expect(values.segments[2]?.value).toBeCloseTo(97 - 422 / 24);
+    expect(values.decisionPercent).toBeCloseTo(116 / 24 / 97 * 100);
   });
   it("uses the Expected scenario at F1", () => expect(timeBreakdown("F1", [], EXAMPLE_SCENARIOS.Expected, []).segments.map((segment) => segment.value)).toEqual([4, 2, 1, 0]));
   it("identifies decision wait at exactly twenty percent", () => expect(timeBreakdown("F1", [], { active: 4, review: 0, decision: 1, external: 0 }, []).decisionPercent).toBe(20));
