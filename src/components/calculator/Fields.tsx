@@ -45,7 +45,7 @@ export function Stepper({ label, value, onChange, step = 1, min = 0 }: { label: 
 export function StepperField({ label, value, onChange, step = 1 }: { label: string; value: number; onChange: (value: number) => void; step?: number }) {
   return <Field label={label}><Stepper label={label} value={value} onChange={onChange} step={step} /></Field>;
 }
-export function Step({ number, title, explanation, summary, collapsed = false, children }: { number: number; title: string; explanation: string; summary?: string; collapsed?: boolean; children: ReactNode }) {
+export function Step({ number, title, explanation, summary, collapsed = false, children }: { number: number; title: string; explanation: string; summary?: string | undefined; collapsed?: boolean; children: ReactNode }) {
   const [open, setOpen] = useState(!collapsed);
   const heading = <><span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-border text-sm text-muted-foreground">{number}</span><span className="min-w-0 flex-1 text-left"><span className="block text-base font-semibold">{title}</span>{summary && <span className="block text-xs font-normal text-muted-foreground">{summary}</span>}</span></>;
   return <section className="calc-step"><h2>{collapsed ? <Button variant="ghost" onClick={() => setOpen(!open)} className="h-auto w-full justify-start gap-3 rounded-none p-0 hover:bg-transparent" aria-expanded={open}>{heading}<ChevronDown size={16} className={open ? "rotate-180" : ""} /></Button> : <span className="flex items-center gap-3">{heading}</span>}</h2>{open && <div className="mt-4 space-y-5"><p className="text-sm leading-6 text-muted-foreground">{explanation}</p>{children}</div>}</section>;
