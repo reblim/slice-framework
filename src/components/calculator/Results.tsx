@@ -2,6 +2,7 @@ import { useRef, useState, type ReactNode } from "react";
 import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Help } from "./Fields";
 import { classificationWarnings, conformance, coverage, deliveryForecast, effectiveRisk, externalLabel, flowStatus, formatNumber, planning, scenarioOrderValid, sliceCard, timeBreakdown, total, verification, type Commitment, type Flow, type History, type HistoryRow, type Level, type Scenarios, type Slice } from "@/lib/calculator";
 
 export function Notice({ tone, children }: { tone: "danger" | "warning" | "success"; children: ReactNode }) {
@@ -37,7 +38,7 @@ export function Results({ slice, history, rows, scenarios, level, commitment, fl
   };
   return <>
     <Panel title="Delivery forecast">
-      <div className="flex gap-2" aria-label={`Evidence level ${level}`}>{["F0", "F1", "F2", "F3"].map((value) => <span key={value} title={value === "F3" ? "Unavailable during the public alpha" : undefined} className={`flex h-8 w-10 items-center justify-center rounded border text-sm font-medium ${value === level ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground"} ${value === "F3" ? "opacity-40" : ""}`}>{value}</span>)}</div>
+      <div className="flex gap-2" aria-label={`Evidence level ${level}`}>{["F0", "F1", "F2", "F3"].map((value) => <span key={value} className={`flex h-8 items-center justify-center rounded border pl-2 text-sm font-medium ${value === level ? "border-link text-link" : "border-border text-muted-foreground"} ${value === "F3" ? "opacity-40" : ""}`}>{value}<Help label={value} /></span>)}</div>
       <p className={level === "F0" ? "text-lg" : "text-3xl font-semibold tabular-nums"}>{forecast}</p>
       {level === "F1" && <><div className="grid grid-cols-3 gap-2 text-sm">{Object.entries(scenarios).map(([name, scenario]) => <div key={name}><p className="text-xs text-muted-foreground">{name}</p><p className="mt-1 font-medium tabular-nums">{formatNumber(total(scenario))} days</p></div>)}</div><p className="text-sm text-muted-foreground">scenarios, not probabilities</p>{!scenarioOrderValid(scenarios) && <Notice tone="warning">Scenario totals must satisfy Optimistic ≤ Expected ≤ Conservative.</Notice>}</>}
       {level === "F2" && <><p className="text-sm leading-relaxed text-muted-foreground">Observed range of {rows.length} comparable accepted slices. About {coverage(rows.length)}% of comparable slices from a stable process land inside it; it says nothing about this one slice.</p><DotStrip rows={rows} /></>}
