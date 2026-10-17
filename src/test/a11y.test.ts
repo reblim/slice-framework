@@ -8,6 +8,9 @@ const port = 4173;
 const base = `http://127.0.0.1:${port}`;
 const installedChromium = "/opt/pw-browsers/chromium";
 const chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const executablePath = [process.env.CHROME_PATH, installedChromium, chrome].find(
+  (candidate) => candidate && existsSync(candidate),
+);
 
 const pages = [
   "/",
@@ -58,42 +61,53 @@ async function expectClean(page: Page) {
   expect(serious.map((violation) => `${violation.id}: ${violation.help}`)).toEqual([]);
 }
 
-describe("accessibility", () => {
-  let server: ChildProcess;
-  let browser: Browser;
+describe.skipIf(!executablePath)(
+  executablePath
+    ? "accessibility"
+    : "accessibility (skipped: no Chrome binary; set CHROME_PATH or install Google Chrome)",
+  () => {
+    let server: ChildProcess;
+    let browser: Browser;
 
-  beforeAll(async () => {
-    server = spawn(
-      "bun",
-      ["x", "vite", "dev", "--port", String(port), "--strictPort", "--host", "127.0.0.1"],
-      {
-        stdio: "ignore",
-      },
-    );
-    await waitForServer();
-    browser = await chromium.launch({
-      headless: true,
-      executablePath: existsSync(installedChromium) ? installedChromium : chrome,
+    beforeAll(async () => {
+      if (!executablePath)
+        throw new Error(
+          "No Chrome binary. Set CHROME_PATH, or install Chromium at /opt/pw-browsers/chromium or Google Chrome.",
+        );
+      server = spawn(
+        "bun",
+        ["x", "vite", "dev", "--port", String(port), "--strictPort", "--host", "127.0.0.1"],
+        {
+          stdio: "ignore",
+        },
+      );
+      await waitForServer();
+      browser = await chromium.launch({
+        headless: true,
+        executablePath,
+      });
+    }, 60_000);
+
+    afterAll(async () => {
+      await browser?.close();
+      server?.kill();
     });
-  }, 60_000);
 
-  afterAll(async () => {
-    await browser?.close();
-    server?.kill();
-  });
-
-  it.each(pages.flatMap((path) => (["light", "dark"] as const).map((theme) => ({ path, theme }))))(
-    "$path in $theme mode has no serious or critical axe violations",
-    async ({ path, theme }) => {
-      const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-      const page = await context.newPage();
-      await audit(page, path, theme);
-      if (path === "/calculator") {
-        await audit(page, path, theme, "Full SLICE forecast");
-        await audit(page, path, theme, "example");
-      }
-      await context.close();
-    },
-    120_000,
-  );
-});
+    it.each(
+      pages.flatMap((path) => (["light", "dark"] as const).map((theme) => ({ path, theme }))),
+    )(
+      "$path in $theme mode has no serious or critical axe violations",
+      async ({ path, theme }) => {
+        const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+        const page = await context.newPage();
+        await audit(page, path, theme);
+        if (path === "/calculator") {
+          await audit(page, path, theme, "Full SLICE forecast");
+          await audit(page, path, theme, "example");
+        }
+        await context.close();
+      },
+      120_000,
+    );
+  },
+);

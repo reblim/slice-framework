@@ -270,7 +270,9 @@ export function calendarISO(today: Date): string {
   return `${today.getFullYear()}-${month}-${day}`;
 }
 
-/** Completion date after `workingDays`, counting Monday–Friday and rounding up. The start date is the first working day when it is a weekday. */
+/** Completion date after `workingDays`, counting Monday–Friday and rounding fractions up.
+ * The start date counts as day 1 when it is a weekday. A weekend start rolls forward to the next weekday before counting.
+ */
 export function addWorkingDays(start: Date, workingDays: number): Date {
   const whole = Math.max(0, Math.ceil(workingDays));
   const cursor = new Date(start.getFullYear(), start.getMonth(), start.getDate());

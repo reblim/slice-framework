@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "bun scripts/write-sitemap.ts && vite build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "vitest run",
+    "test": "vitest run --exclude src/test/a11y.test.ts",
+    "test:a11y": "vitest run src/test/a11y.test.ts",
     "test:watch": "vitest"
   },
   "overrides": {

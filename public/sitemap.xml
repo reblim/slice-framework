@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://sliceframework.org/</loc></url>
+  <url><loc>https://sliceframework.org/spec/0.3.2</loc></url>
+  <url><loc>https://sliceframework.org/spec/0.3.1</loc></url>
+  <url><loc>https://sliceframework.org/spec/0.3</loc></url>
+  <url><loc>https://sliceframework.org/spec/0.2</loc></url>
+  <url><loc>https://sliceframework.org/spec/0.1</loc></url>
+  <url><loc>https://sliceframework.org/alpha/pilot-protocol</loc></url>
+  <url><loc>https://sliceframework.org/alpha/quick-start</loc></url>
+  <url><loc>https://sliceframework.org/alpha/start-here</loc></url>
+  <url><loc>https://sliceframework.org/alpha/templates</loc></url>
+  <url><loc>https://sliceframework.org/research/01-initial-research</loc></url>
+  <url><loc>https://sliceframework.org/research/02-external-review-of-v0-2</loc></url>
+  <url><loc>https://sliceframework.org/research/03-assessment-of-external-review</loc></url>
+  <url><loc>https://sliceframework.org/research/04-alpha-readiness-review</loc></url>
+  <url><loc>https://sliceframework.org/research/05-naming-research</loc></url>
+  <url><loc>https://sliceframework.org/research/06-naming-and-versioning-assessment</loc></url>
+  <url><loc>https://sliceframework.org/changelog</loc></url>
+  <url><loc>https://sliceframework.org/decisions</loc></url>
+  <url><loc>https://sliceframework.org/calculator</loc></url>
+</urlset>

@@ -42,5 +42,8 @@ H1–H6 from the spec, all exploratory: with 5–10 teams and no control group, 
 
 - **What we collect:** the metrics above, weekly form answers and interview notes. Never source code, customer data or credentials.
 - **Who sees it:** only Milber Ferreira, who runs the pilot. Teams are pseudonymous in all analysis, and nothing that identifies a team or a person is published without written consent.
-- **Where it is kept:** in EU-hosted tools where possible, until six months after the alpha report is published. Then it is deleted.
+- **Where it is kept:** We use Zoho Mail for email. Zoho Mail stores data in the EU. Weekly form answers and interview notes are kept until six months after the alpha report is published, then deleted.
+- **Data controller:** Milber Ferreira, slice@milberferreira.com.
+- **Legal basis:** your consent (GDPR article 6(1)(a)).
+- Pilot results are published only in aggregated, anonymous form.
 - **Your choice:** participation is voluntary and based on your consent. You can stop at any time and ask for your data to be deleted: email slice@milberferreira.com.

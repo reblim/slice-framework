@@ -26,5 +26,10 @@ export const Route = createFileRoute("/alpha/$page")({
       links: [{ rel: "canonical", href: url }],
     };
   },
-  component: () => <DocPage path={`alpha/${Route.useParams().page}`} />,
+  component: AlphaPage,
 });
+
+function AlphaPage() {
+  const { page } = Route.useParams();
+  return <DocPage path={`alpha/${page}`} />;
+}

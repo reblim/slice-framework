@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use or adapt SLICE, please cite it as below."
+message: "If you use or adapt SLICE, please cite it as below. The specification is CC BY 4.0; the website code is MIT."
 title: "SLICE Framework"
 type: software
 version: "0.3.2"
@@ -9,7 +9,7 @@ authors:
     given-names: "Milber"
 repository-code: "https://github.com/reblim/slice-framework"
 url: "https://sliceframework.org"
-license: CC-BY-4.0
+license: ["CC-BY-4.0", "MIT"]
 abstract: >-
   An open framework for planning, estimating and shipping software when AI
   writes the code, for teams of 1 to 25. Public alpha.

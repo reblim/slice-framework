@@ -2,7 +2,7 @@
 
 **Plan and estimate software when AI writes the code.**
 
-AI made building fast. Reviewing, testing and deciding didn't speed up. SLICE is an open framework for planning, estimating and shipping software with AI, for teams of 1 to 25. It helps a team decide what deserves building, how much planning each piece deserves, when it will really be live, and whether it worked.
+AI made building fast. Reviewing, testing and deciding didn't keep up. SLICE is an open framework for planning, estimating and shipping software with AI, for teams of 1 to 25. It helps a team decide what deserves building, how much planning each piece deserves, when it will really be live, and whether it worked.
 
 > **Status: public alpha (v0.3.2).** Open for testing, criticism and refinement. SLICE is not a proven framework, an industry standard or a successor to Scrum. It is not affiliated with SliceOps.
 
@@ -10,7 +10,7 @@ AI made building fast. Reviewing, testing and deciding didn't speed up. SLICE is
 
 ## Why SLICE exists
 
-AI tools can now build in a day what used to take two weeks. The rest of the work did not speed up: reviewing and testing the code, deciding what exactly to build, and waiting on people outside the team. An authentication module that once took 3–4 weeks now takes 1–3 weeks, not one day.
+For many tasks, AI tools now build in days what used to take weeks. The rest of the work did not speed up: reviewing and testing the code, deciding what exactly to build, and waiting on people outside the team. In an illustrative estimate, an authentication module that once took 3–4 weeks takes 1–3 weeks with AI tools, not one day.
 
 When implementation stops being the slowest step, delivery is limited by deciding and proving. SLICE estimates all of it, finds where work waits longest, and manages work to that limit. It never multiplies an old estimate by an "AI factor".
 

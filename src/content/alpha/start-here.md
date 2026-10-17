@@ -4,9 +4,9 @@
 
 ## What changed
 
-AI tools can now build a feature in hours or days that used to take weeks. But the rest of the work did not speed up: reviewing the code, testing it, deciding what exactly to build, and waiting on people outside the team. Often it grew, because there is more code to check.
+For many features, AI tools now build in hours or days what used to take weeks. But the rest of the work did not speed up: reviewing the code, testing it, deciding what exactly to build, and waiting on people outside the team. Often it grew, because there is more code to check.
 
-Take an authentication module:
+Take an authentication module, as an illustrative estimate rather than a measurement:
 
 | | Before AI tools | With AI tools |
 | --- | --- | --- |

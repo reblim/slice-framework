@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   addWorkingDays,
   EMPTY_QUICK,
+  formatCalendarDate,
   liveRange,
   NO_OVERRIDES,
   QUICK_EXAMPLE,
@@ -62,6 +63,40 @@ describe("Quick estimate", () => {
     });
     const saturday = addWorkingDays(new Date(2026, 9, 17), 1);
     expect(saturday.getDay()).toBe(1);
+  });
+  it("counts the start date as day 1 when it is a weekday, and rolls a weekend start to Monday", () => {
+    // 0 stays on a weekday start. 0.5 rounds up to 1, so it finishes on that same day. Five weekdays run forward, skipping Saturday and Sunday.
+    const done = (start: string, days: number) =>
+      formatCalendarDate(
+        addWorkingDays(
+          new Date(
+            Number(start.slice(0, 4)),
+            Number(start.slice(5, 7)) - 1,
+            Number(start.slice(8, 10)),
+          ),
+          days,
+        ),
+      );
+    const cases: [weekday: string, start: string, days: number, expected: string][] = [
+      ["Monday", "2026-10-19", 0, "19 October 2026"],
+      ["Monday", "2026-10-19", 0.5, "19 October 2026"],
+      ["Monday", "2026-10-19", 1, "19 October 2026"],
+      ["Monday", "2026-10-19", 5, "23 October 2026"],
+      ["Friday", "2026-10-16", 0, "16 October 2026"],
+      ["Friday", "2026-10-16", 0.5, "16 October 2026"],
+      ["Friday", "2026-10-16", 1, "16 October 2026"],
+      ["Friday", "2026-10-16", 5, "22 October 2026"],
+      ["Saturday", "2026-10-17", 0, "19 October 2026"],
+      ["Saturday", "2026-10-17", 0.5, "19 October 2026"],
+      ["Saturday", "2026-10-17", 1, "19 October 2026"],
+      ["Saturday", "2026-10-17", 5, "23 October 2026"],
+      ["Sunday", "2026-10-18", 0, "19 October 2026"],
+      ["Sunday", "2026-10-18", 0.5, "19 October 2026"],
+      ["Sunday", "2026-10-18", 1, "19 October 2026"],
+      ["Sunday", "2026-10-18", 5, "23 October 2026"],
+    ];
+    for (const [weekday, start, days, expected] of cases)
+      expect(done(start, days), `${weekday} + ${days} working days`).toBe(expected);
   });
   it("applies saved range overrides", () => {
     const overrides: RangeOverrides = { ...NO_OVERRIDES, risk: { High: { low: 3, high: 6 } } };
