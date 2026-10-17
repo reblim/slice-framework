@@ -35,6 +35,16 @@ export function NumberField({ label, value, onChange }: { label: string; value: 
 export function CheckField({ label, checked, onChange, disabled = false }: { label: string; checked: boolean; onChange: (value: boolean) => void; disabled?: boolean }) {
   return <div className="flex items-center gap-2"><label className={`flex items-center gap-3 text-sm ${disabled ? "text-muted-foreground" : ""}`}><Checkbox checked={checked} disabled={disabled} onCheckedChange={(value) => onChange(value === true)} />{label}</label><Help label={label} /></div>;
 }
+export function Segmented<T extends string>({ label, value, options, onChange, disabled = false }: { label: string; value: T | ""; options: readonly { value: T; label: string; description?: string }[]; onChange: (value: T) => void; disabled?: boolean }) {
+  return <Field label={label}><div className="calc-segmented" role="group" aria-label={label}>{options.map((option) => <Button key={option.value} type="button" variant="outline" disabled={disabled} aria-pressed={value === option.value} className={value === option.value ? "selected" : ""} title={option.description} onClick={() => onChange(option.value)}>{option.label}</Button>)}</div></Field>;
+}
+export function Stepper({ label, value, onChange, step = 1, min = 0 }: { label: string; value: number; onChange: (value: number) => void; step?: number; min?: number }) {
+  const clamp = (next: number) => Math.max(min, Math.round(next / step) * step);
+  return <div className="calc-stepper" aria-label={label}><Button type="button" variant="outline" size="icon" aria-label={`Decrease ${label}`} disabled={value <= min} onClick={() => onChange(clamp(value - step))}>−</Button><span className="tabular-nums" aria-live="polite">{formatNumber(value)}</span><Button type="button" variant="outline" size="icon" aria-label={`Increase ${label}`} onClick={() => onChange(clamp(value + step))}>+</Button></div>;
+}
+export function StepperField({ label, value, onChange, step = 1 }: { label: string; value: number; onChange: (value: number) => void; step?: number }) {
+  return <Field label={label}><Stepper label={label} value={value} onChange={onChange} step={step} /></Field>;
+}
 export function Step({ number, title, explanation, summary, collapsed = false, children }: { number: number; title: string; explanation: string; summary?: string; collapsed?: boolean; children: ReactNode }) {
   const [open, setOpen] = useState(!collapsed);
   const heading = <><span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-border text-sm text-muted-foreground">{number}</span><span className="min-w-0 flex-1 text-left"><span className="block text-base font-semibold">{title}</span>{summary && <span className="block text-xs font-normal text-muted-foreground">{summary}</span>}</span></>;
