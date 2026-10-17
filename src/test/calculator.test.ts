@@ -7,12 +7,12 @@ const header = "slice,size,work_type,mode,context,started,accepted";
 
 describe("Measured slice evidence", () => {
   it("matches nine supplied slices and excludes two other classes and one before the change", () => {
-    expect(matching.comparable.map((row) => row.cycle)).toEqual([8, 12, 7, 14, 7, 10, 6, 14, 9]);
+    expect(matching.comparable.map((row) => row.cycle)).toEqual([11, 7, 16, 9, 14, 8, 10, 11, 11]);
     expect([matching.otherClass, matching.beforeChange, matching.excluded]).toEqual([2, 1, 3]);
   });
-  it("uses the observed 6–14 day range", () => {
+  it("uses the observed 7–16 day range", () => {
     const values = matching.comparable.map((row) => row.cycle);
-    expect([Math.min(...values), Math.max(...values)]).toEqual([6, 14]);
+    expect([Math.min(...values), Math.max(...values)]).toEqual([7, 16]);
   });
   it("computes 80 percent coverage from nine observations", () => expect(coverage(9)).toBe(80));
   it("requires acceptance evidence even with nine comparable slices", () => expect(evidenceLevel("  \n ", 9)).toBe("F0"));
