@@ -1,5 +1,9 @@
 # Task roadmap
 
+- [ ] Add the Forecast calculator input steps and measured-history logic.
+- [ ] Add delivery, commitment, time, flow, verification and slice-card results.
+- [ ] Link the calculator after Spec and verify rules and desktop/mobile flows.
+
 - [x] Preserve the existing Changelog and Decisions markdown pages.
 - [x] Add the Research index and document discovery.
 - [x] Update shared navigation while preserving theme and spec version controls.
