@@ -15,3 +15,5 @@
 - Calculator domain rules live in a browser-safe pure module and CSV parsing uses Papa Parse; keeping calculations separate from controls makes evidence and flow rules independently testable without a backend.
 - Calculator input adapters serialize editable history through the existing parser; label help is centralized separately from controls to preserve exact explanations and existing evidence rules.
 - DocumentationShell owns shared navigation, version selection and scroll-spy ToC around the root Outlet; leaf routes retain document loading and metadata so layout changes never change public URLs or content sources.
+- The calculator has two tabs: "Quick estimate" (pure rules in src/lib/quick-estimate.ts, ranges overridable via localStorage) and "Full SLICE forecast" (src/lib/calculator.ts); "Continue in Full SLICE forecast" carries answers into the full tab as F1 scenarios, and the quick tab never duplicates full-tab rules.
+- Calculator results are derived only from useMemo over inputs (no state-from-state effects) so the page stays idle-safe; per-step "touched" tracking gates every warning and result behind user interaction.
