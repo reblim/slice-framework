@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { Moon, Sun } from "lucide-react";
+import { Link, useLocation } from "@tanstack/react-router";
+import { Menu, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SITE_NAME } from "@/config";
 import { currentVersion } from "@/lib/content";
@@ -20,19 +20,20 @@ function ThemeToggle() {
     localStorage.setItem("theme", d ? "dark" : "light");
   };
   return (
-    <Button type="button" variant="outline" size="icon" onClick={toggle} className="shrink-0" aria-label="Toggle theme" title={dark ? "Switch to light mode" : "Switch to dark mode"}>
+    <Button type="button" variant="ghost" size="icon" onClick={toggle} className="header-icon shrink-0" aria-label="Toggle theme" title={dark ? "Switch to light mode" : "Switch to dark mode"}>
       {dark ? <Sun size={16} /> : <Moon size={16} />}
     </Button>
   );
 }
 
-export function SiteHeader() {
-  const nav = "text-muted-foreground hover:text-foreground";
+export function SiteHeader({ onMenu }: { onMenu: () => void }) {
+  const { pathname } = useLocation();
+  const nav = "header-link";
   return (
-    <header className="border-b border-border">
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-6 px-4">
-        <Link to="/" className="shrink-0 font-semibold tracking-wide text-foreground">{SITE_NAME}</Link>
-        <nav aria-label="Main navigation" className="flex min-w-0 flex-1 items-center gap-4 overflow-x-auto whitespace-nowrap text-sm">
+    <header className="site-header">
+      <div className="header-inner">
+        <div className="header-brand"><Link to="/" className="site-logo">{SITE_NAME}</Link><span className="alpha-badge">alpha</span></div>
+        <nav aria-label="Main navigation" className="header-nav" data-path={pathname}>
           <Link to="/spec/$version" params={{ version: currentVersion.id }} className={nav}>Spec</Link>
           <Link to="/calculator" className={nav}>Calculator</Link>
           <Link to="/alpha/$page" params={{ page: "start-here" }} className={nav}>Alpha kit</Link>
@@ -40,7 +41,7 @@ export function SiteHeader() {
           <Link to="/decisions" className={nav}>Decisions</Link>
           <Link to="/research" className={nav}>Research</Link>
         </nav>
-        <ThemeToggle />
+        <div className="header-tools"><Button variant="ghost" size="icon" className="header-icon lg:hidden" aria-label="Open navigation" title="Open navigation" onClick={onMenu}><Menu size={16} /></Button><ThemeToggle /></div>
       </div>
     </header>
   );
