@@ -30,8 +30,8 @@
 | D24 | Treat "SliceOps" as unverified and exclude it | v0.3 | Superseded | By D25: SliceOps verified at sliceops.org |
 | D25 | Position SLICE on investment, forecasting and outcomes, distinct from SliceOps' execution audit | v0.3.1 | Active | |
 | D26 | Release alpha corrections as patch v0.3.1; reserve v0.4 for alpha learnings | v0.3.1 | Active | No rule changed |
-| D27 | Start the alpha with invited teams now; go public after name clearance | v0.3.1 | Active | Proposed by Claude; Milber to confirm |
-| D28 | Public name not yet decided; SLICE remains the working name | v0.3.1 | Active | Claude recommends a new name (Pensum); the decision is Milber's |
+| D27 | Start the alpha with invited teams now; go public after name clearance | v0.3.1 | Active | Proposed by Anthropic's models; Milber to confirm |
+| D28 | Public name not yet decided; SLICE remains the working name | v0.3.1 | Active | Anthropic's models recommend a new name (Pensum); the decision is Milber's |
 | D29 | Pilot thresholds are exploratory; F3 is unavailable during the alpha | v0.3.1 | Active | |
 
 ## Open questions for the next version

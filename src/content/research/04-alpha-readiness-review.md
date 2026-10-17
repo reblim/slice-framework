@@ -2,7 +2,7 @@
 
 16 October 2026
 
-> **By Milber Ferreira, with ChatGPT.** The review that led to v0.3.1, reproduced as written; formatting converted to Markdown. Its SliceOps finding was verified and is correct.
+> **By Milber Ferreira, with OpenAI's models.** The review that led to v0.3.1, reproduced as written; formatting converted to Markdown. Its SliceOps finding was verified and is correct.
 
 Yes. I would approve SLICE Framework v0.3 for public alpha testing, with a few small corrections before publication.
 

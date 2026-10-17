@@ -33,4 +33,4 @@ When implementation stops being the slowest step, delivery is limited by decidin
 | [Pilot protocol](/alpha/pilot-protocol) | Cohort, timeline, measures, weekly form, data handling |
 | [Reference specification](/spec/0.3.1) | v0.3.1, the full framework |
 
-SLICE is developed by Milber Ferreira, with research and drafting help from ChatGPT and Claude.
+SLICE is developed by Milber Ferreira, with research and drafting help from OpenAI's and Anthropic's models.

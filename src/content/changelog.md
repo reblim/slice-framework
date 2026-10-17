@@ -1,15 +1,15 @@
 # Changelog
 
-**Current version: [v0.3.1](/spec/0.3.1), the public-alpha release of v0.3.** All versions are Milber Ferreira's, developed with ChatGPT and Claude. "SLICE" is a working name pending a public-name decision.
+**Current version: [v0.3.1](/spec/0.3.1), the public-alpha release of v0.3.** All versions are Milber Ferreira's, developed with OpenAI's and Anthropic's models. "SLICE" is a working name pending a public-name decision.
 
 ## Versions
 
 | Version | Status | Author | AI assistance | What it is |
 | --- | --- | --- | --- | --- |
-| [v0.3.1](/spec/0.3.1) | Current: public alpha | Milber | Alpha review with ChatGPT; Claude fact-checked it and redrafted | Patch: alpha status, SliceOps correction, exploratory thresholds |
-| [v0.3](/spec/0.3) | Archived | Milber | External review with ChatGPT; Claude fact-checked it and redrafted | Pilot-ready working specification |
-| [v0.2](/spec/0.2) | Archived | Milber | Claude corroborated the research and redrafted | First research-backed revision |
-| [v0.1](/spec/0.1) | Archived | Milber | ChatGPT | Founding specification |
+| [v0.3.1](/spec/0.3.1) | Current: public alpha | Milber | Alpha review with OpenAI's models; Anthropic's models fact-checked it and redrafted | Patch: alpha status, SliceOps correction, exploratory thresholds |
+| [v0.3](/spec/0.3) | Archived | Milber | External review with OpenAI's models; Anthropic's models fact-checked it and redrafted | Pilot-ready working specification |
+| [v0.2](/spec/0.2) | Archived | Milber | Anthropic's models corroborated the research and redrafted | First research-backed revision |
+| [v0.1](/spec/0.1) | Archived | Milber | OpenAI's models | Founding specification |
 
 **Lineage:** initial research → v0.1 → research review (section 0 of v0.2) → v0.2 → external review and assessment → v0.3 → alpha readiness review, SliceOps verification and naming assessment → v0.3.1.
 

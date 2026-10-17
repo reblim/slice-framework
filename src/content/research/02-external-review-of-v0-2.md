@@ -2,7 +2,7 @@
 
 Research review · 16 October 2026
 
-> **By Milber Ferreira, with ChatGPT.** A critical review of v0.2 that fed into v0.3, reproduced as written; formatting converted to Markdown. One claim was later checked: SliceOps was first thought not to exist, then found at sliceops.org (see the [assessment](/research/03-assessment-of-external-review) and v0.3.1).
+> **By Milber Ferreira, with OpenAI's models.** A critical review of v0.2 that fed into v0.3, reproduced as written; formatting converted to Markdown. One claim was later checked: SliceOps was first thought not to exist, then found at sliceops.org (see the [assessment](/research/03-assessment-of-external-review) and v0.3.1).
 
 I agree with the direction of v0.2, but I would not publish it unchanged. It is substantially stronger than v0.1, particularly in separating product decisions, engineering coordination and verification. However, the research reveals some important overlap with existing frameworks, several forecasting assumptions that need correction, and a major opportunity to sharpen the economic thesis.
 

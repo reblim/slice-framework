@@ -2,7 +2,7 @@
 
 16 October 2026
 
-> **By Milber Ferreira, with ChatGPT.** Naming research reproduced as written; formatting converted to Markdown and the interactive selection buttons omitted. A follow-up assessment is in [Naming and versioning assessment](/research/06-naming-and-versioning-assessment).
+> **By Milber Ferreira, with OpenAI's models.** Naming research reproduced as written; formatting converted to Markdown and the interactive selection buttons omitted. A follow-up assessment is in [Naming and versioning assessment](/research/06-naming-and-versioning-assessment).
 
 SLICE is a strong name, but it is not the only good name—and I would not commit to it yet.
 

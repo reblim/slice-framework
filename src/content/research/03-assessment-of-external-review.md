@@ -2,7 +2,7 @@
 
 16 October 2026
 
-> **By Claude, as input to Milber Ferreira.** A fact-check of and response to the [external review of v0.2](/research/02-external-review-of-v0-2), given before v0.3 was drafted. Reproduced unchanged apart from formatting. One finding here was later shown to be wrong: SliceOps does exist, at sliceops.org (corrected in v0.3.1).
+> **By Anthropic's models, as input to Milber Ferreira.** A fact-check of and response to the [external review of v0.2](/research/02-external-review-of-v0-2), given before v0.3 was drafted. Reproduced unchanged apart from formatting. One finding here was later shown to be wrong: SliceOps does exist, at sliceops.org (corrected in v0.3.1).
 
 Mostly yes. The review catches real mistakes in v0.2, and I'd accept most of its changes. I'd push back on its thesis wording, the forecasting remedy, and one metric, and I couldn't verify one of its competitors.
 

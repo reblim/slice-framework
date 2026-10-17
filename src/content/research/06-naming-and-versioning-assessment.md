@@ -2,7 +2,7 @@
 
 16 October 2026
 
-> **By Claude, as input to Milber Ferreira.** A response to the [alpha readiness review](/research/04-alpha-readiness-review) and the [naming research](/research/05-naming-research). The naming decision is Milber's and still open.
+> **By Anthropic's models, as input to Milber Ferreira.** A response to the [alpha readiness review](/research/04-alpha-readiness-review) and the [naming research](/research/05-naming-research). The naming decision is Milber's and still open.
 
 **Release v0.3.1 now, and choose and clear the public name before the repository goes public.** Alpha testing with invited teams can start under the working name.
 
@@ -26,9 +26,9 @@ First web checks only; none of this is legal clearance.
 | SCOPE | Naming research | SCOPE Core, AI governance software; "scope" is an everyday project-management word ("scope creep") | Reject |
 | BRIEF | Naming research | An established B.R.I.E.F. AI prompting framework taught in courses | Reject |
 | SPARK, PULSE | Naming research | Generic and heavily used in software | Reject |
-| Tranche | Claude | Tranch (YC fintech), Tranche (AI PR-review tool), a Python library, a crypto protocol | Reject |
-| Tramo | Claude | Tramo, a logistics SaaS | Weak |
-| **Pensum** | Claude | None found in software in a first check | **Recommended, pending clearance** |
+| Tranche | Anthropic's models | Tranch (YC fintech), Tranche (AI PR-review tool), a Python library, a crypto protocol | Reject |
+| Tramo | Anthropic's models | Tramo, a logistics SaaS | Weak |
+| **Pensum** | Anthropic's models | None found in software in a first check | **Recommended, pending clearance** |
 
 ## Why Pensum
 

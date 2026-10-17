@@ -2,7 +2,7 @@
 
 Research and proposed operating model · October 2026
 
-> **By Milber Ferreira, with ChatGPT.** The research behind v0.1 and v0.2, reproduced as written; formatting converted to Markdown. Interactive elements (an estimate explorer and a forecast chart) survive only as text. The document ends partway through section 12, as received.
+> **By Milber Ferreira, with OpenAI's models.** The research behind v0.1 and v0.2, reproduced as written; formatting converted to Markdown. Interactive elements (an estimate explorer and a forecast chart) survive only as text. The document ends partway through section 12, as received.
 
 ## Executive recommendation
 
@@ -336,9 +336,9 @@ I would not assign complexity estimates based solely on the selected AI tool. In
 
 | Workflow | Suitable AI tools | Human responsibility |
 | --- | --- | --- |
-| Product discovery | ChatGPT, Claude, Perplexity | Validate customer evidence |
-| Requirements and specifications | ChatGPT, Claude | Decide scope and acceptance criteria |
-| UX exploration and prototypes | Lovable, Figma AI, Claude | UX quality and design decisions |
+| Product discovery | OpenAI's models, Anthropic's models, Perplexity | Validate customer evidence |
+| Requirements and specifications | OpenAI's models, Anthropic's models | Decide scope and acceptance criteria |
+| UX exploration and prototypes | Lovable, Figma AI, Anthropic's models | UX quality and design decisions |
 | Frontend implementation | Lovable, Cursor, Claude Code, Codex | Review architecture and implementation |
 | Backend engineering | Claude Code, Cursor, Codex | Business logic, data integrity, security |
 | Refactoring and migrations | Claude Code, Cursor, Codex | Migration safety and compatibility |
@@ -353,7 +353,7 @@ A useful practical distinction:
 
 - **Lovable-led work:** visual interfaces, prototypes, conventional CRUD workflows, rapid feedback loops.
 - **Claude Code / Cursor / Codex-led work:** repository-wide changes, complex business logic, tests, migrations, infrastructure and deeper integrations.
-- **ChatGPT / Claude-led product work:** problem framing, competitive analysis, feature decomposition, acceptance criteria, risk assessments and stakeholder communication.
+- **Product work led by OpenAI's or Anthropic's models:** problem framing, competitive analysis, feature decomposition, acceptance criteria, risk assessments and stakeholder communication.
 
 Cursor's repository rules and OpenAI Codex's agent instructions support the broader principle of giving coding agents persistent project-specific context rather than repeating requirements in every prompt.
 
