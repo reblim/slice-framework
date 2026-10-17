@@ -31,7 +31,10 @@ export const help: Record<string, string> = {
   "F0": "Not estimated: define acceptance evidence first.",
   "F1": "Judgment scenarios; never percentiles.",
   "F2": "Measured range from 7+ similar finished slices.",
-  "F3": "Statistical forecast; off during the alpha."
+  "F3": "Statistical forecast; off during the alpha.",
+  "Build time with AI": "Hands-on building with your AI tools. Just the building.",
+  "Feature": "Pick the closest match; 'Something else' lets you name your own.",
+  "No major change": "Your team, tools and codebase are unchanged, so all finished slices still count."
 };
 const aliases: Record<string, string> = {
   "Best case": "Best / Likely / Worst case", "Likely": "Best / Likely / Worst case", "Worst case": "Best / Likely / Worst case",

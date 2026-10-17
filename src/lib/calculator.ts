@@ -128,19 +128,20 @@ export function sliceCard(slice: Slice, commitment: Commitment, level: Level, ro
 }
 
 export const EXAMPLE_CSV = `slice,size,work_type,mode,context,started,accepted,review_wait_hours,decision_latency_hours
-SL-031,M,ui,1,established,2026-05-12,2026-05-22,30,8
-SL-040,M,ui,1,established,2026-07-06,2026-07-14,20,4
-SL-041,M,ui,1,established,2026-07-09,2026-07-21,46,12
-SL-043,S,ui,1,established,2026-07-13,2026-07-16,6,0
-SL-044,M,ui,1,established,2026-07-20,2026-07-27,18,6
-SL-046,L,integration,3,established,2026-07-21,2026-08-14,70,30
-SL-047,M,ui,1,established,2026-07-28,2026-08-11,52,26
-SL-049,M,ui,1,established,2026-08-05,2026-08-12,16,2
-SL-052,M,ui,1,established,2026-08-18,2026-08-28,34,10
-SL-055,M,ui,1,established,2026-09-01,2026-09-07,12,4
-SL-057,M,ui,1,established,2026-09-08,2026-09-22,60,30
-SL-060,M,ui,1,established,2026-09-21,2026-09-30,26,8`;
-export const EXAMPLE_SLICE: Slice = { item: "Invite teammates by email", itemType: "Bet", title: "Invite teammates by email", mode: "1", size: "M", workType: "ui", context: "established", risk: "Medium", leverage: "High", acceptance: "An invited teammate can accept an email invitation and join the correct workspace; automated tests cover expired and invalid invitations." };
+SL-021,M,integration,3,established,2026-05-11,2026-05-25,40,16
+SL-030,M,integration,3,established,2026-07-02,2026-07-13,30,10
+SL-032,S,ui,1,established,2026-07-06,2026-07-09,6,0
+SL-033,M,integration,3,established,2026-07-14,2026-07-21,20,6
+SL-035,M,integration,3,established,2026-07-22,2026-08-07,62,30
+SL-037,M,integration,3,established,2026-08-04,2026-08-13,28,8
+SL-039,L,data,2,established,2026-08-10,2026-08-28,48,20
+SL-040,M,integration,3,established,2026-08-17,2026-08-31,44,22
+SL-042,M,integration,3,established,2026-08-31,2026-09-08,24,4
+SL-044,M,integration,3,established,2026-09-07,2026-09-17,32,12
+SL-046,M,integration,3,established,2026-09-21,2026-10-02,36,14
+SL-048,M,integration,3,established,2026-10-01,2026-10-12,30,10`;
+export const EXAMPLE_EVIDENCE = ["Automated tests pass", "Independent security review", "Works in staging"];
+export const EXAMPLE_SLICE: Slice = { item: "User accounts", itemType: "Obligation", title: "Email and password sign-in with a managed auth provider", mode: "3", size: "M", workType: "integration", context: "established", risk: "High", leverage: "High", acceptance: EXAMPLE_EVIDENCE.join("; ") };
 export const EXAMPLE_SCENARIOS: Scenarios = { Optimistic: { active: 2, review: 1, decision: 0, external: 0 }, Expected: { active: 4, review: 2, decision: 1, external: 0 }, Conservative: { active: 6, review: 3, decision: 2, external: 1 } };
-export const EXAMPLE_COMMITMENT: Commitment = { type: "Target", when: "Nov", decider: "founder", riskAccepted: false, outcomeLevel: "F1", criterion: "Continue if 8 of the first 30 new workspaces invite a second member within 14 days" };
-export const EXAMPLE_FLOW: Flow = { constraint: "Verification", waiting: 3, clears: 4, wip: 6, throughput: 3 };
+export const EXAMPLE_COMMITMENT: Commitment = { type: "Target", when: "November", decider: "Tech lead", riskAccepted: false, outcomeLevel: "F1", criterion: "" };
+export const EXAMPLE_FLOW: Flow = { constraint: "Verification", waiting: 2, clears: 3, wip: 4, throughput: 2 };
