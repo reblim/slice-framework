@@ -1,8 +1,8 @@
 # Task roadmap
 
-- [ ] Restyle fonts, palette, articles and components without changing content.
-- [ ] Add shared documentation shell, responsive navigation and version menu.
-- [ ] Restyle Home and verify desktop/mobile, theme and document navigation.
+- [x] Restyle fonts, palette, articles and components without changing content.
+- [x] Add shared documentation shell, responsive navigation and version menu.
+- [x] Restyle Home and verify desktop/mobile, theme and document navigation.
 - [ ] Add GitHub links once the repository URL is supplied (blocked: URL missing).
 
 - [x] Add the Forecast calculator input steps and measured-history logic.
