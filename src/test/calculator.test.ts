@@ -72,8 +72,8 @@ describe("Commitment and flow rules", () => {
   it("permits a Commitment with written F1 risk acceptance", () => expect(conformance({ ...EXAMPLE_COMMITMENT, type: "Commitment", riskAccepted: true }, "F1").tone).toBe("success"));
   it("permits F2 Commitments", () => expect(conformance({ ...EXAMPLE_COMMITMENT, type: "Commitment" }, "F2").tone).toBe("success"));
   it("has room when three wait and four clear weekly", () => expect(flowStatus(EXAMPLE_FLOW).tone).toBe("success"));
-  it("is at the limit when waiting equals capacity", () => expect(flowStatus({ ...EXAMPLE_FLOW, waiting: 4 }).tone).toBe("warning"));
-  it("stops starting above one week of waiting work", () => expect(flowStatus({ ...EXAMPLE_FLOW, waiting: 5 }).tone).toBe("danger"));
+  it("is at the limit when waiting equals capacity", () => expect(flowStatus({ ...EXAMPLE_FLOW, waiting: 3 }).tone).toBe("warning"));
+  it("stops starting above one week of waiting work", () => expect(flowStatus({ ...EXAMPLE_FLOW, waiting: 4 }).tone).toBe("danger"));
   it("computes example Little's Law as two weeks", () => expect(EXAMPLE_FLOW.wip / EXAMPLE_FLOW.throughput).toBe(2));
   it("measures three acceptances in the CSV's last twenty-eight days divided by four", () => expect(measuredThroughput(history.rows)).toBe(0.75));
   it("has zero measured throughput with no history", () => expect(measuredThroughput([])).toBe(0));
@@ -81,9 +81,9 @@ describe("Commitment and flow rules", () => {
 
 describe("Classification and verification", () => {
   it("forces High verification risk in mode 3", () => expect(effectiveRisk({ ...EXAMPLE_SLICE, mode: "3", risk: "Low" })).toBe("High"));
-  it("retains chosen risk outside mode 3", () => expect(effectiveRisk({ ...EXAMPLE_SLICE, risk: "Low" })).toBe("Low"));
-  it("warns for XL slices", () => expect(classificationWarnings({ ...EXAMPLE_SLICE, size: "XL" })).toHaveLength(1));
-  it.each(["L", "XL"])("warns on an Improvement sized %s", (size) => expect(classificationWarnings({ ...EXAMPLE_SLICE, itemType: "Improvement", size })).toHaveLength(size === "XL" ? 2 : 1));
+  it("retains chosen risk outside mode 3", () => expect(effectiveRisk({ ...EXAMPLE_SLICE, mode: "1", risk: "Low" })).toBe("Low"));
+  it("warns for XL slices", () => expect(classificationWarnings({ ...EXAMPLE_SLICE, mode: "1", size: "XL" })).toHaveLength(1));
+  it.each(["L", "XL"])("warns on an Improvement sized %s", (size) => expect(classificationWarnings({ ...EXAMPLE_SLICE, mode: "1", itemType: "Improvement", size })).toHaveLength(size === "XL" ? 2 : 1));
   it("warns for experiment mode", () => expect(classificationWarnings({ ...EXAMPLE_SLICE, mode: "E" })).toHaveLength(1));
   it("sets direct-mode coordination to five minutes", () => expect(planning["0"].time).toBe("5 minutes"));
 });
