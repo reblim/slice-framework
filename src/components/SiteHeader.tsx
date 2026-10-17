@@ -34,6 +34,7 @@ export function SiteHeader() {
         <Link to="/" className="shrink-0 font-semibold tracking-wide text-foreground">{SITE_NAME}</Link>
         <nav aria-label="Main navigation" className="flex min-w-0 flex-1 items-center gap-4 overflow-x-auto whitespace-nowrap text-sm">
           <Link to="/spec/$version" params={{ version: currentVersion.id }} className={nav}>Spec</Link>
+          <Link to="/calculator" className={nav}>Calculator</Link>
           <Link to="/alpha/$page" params={{ page: "start-here" }} className={nav}>Alpha kit</Link>
           <Link to="/changelog" className={nav}>Changelog</Link>
           <Link to="/decisions" className={nav}>Decisions</Link>
