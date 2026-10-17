@@ -8,15 +8,15 @@ For many features, AI tools now build in hours or days what used to take weeks. 
 
 Take an authentication module, as an illustrative estimate rather than a measurement:
 
-| | Before AI tools | With AI tools |
-| --- | --- | --- |
-| Building | About 2 weeks | 1–2 days |
-| Review and security testing | 2–4 days | 2–5 days |
-| Open decisions | 1–3 days | 1–3 days |
-| Waiting on others | 0–5 days | 0–5 days |
-| **Until it is live** | **About 3–4 weeks** | **About 1–3 weeks** |
+| | Before AI tools | With AI tools | What AI changes |
+| --- | --- | --- | --- |
+| Building | About 2 weeks | 1–2 days | AI writes most of the code |
+| Review and security testing | 2–4 days | 2–4 days | AI pre-reviews, writes tests and scans for issues, but there is more code to check and a person still signs off |
+| Open decisions | 1–3 days | 0.5–2 days | Quick AI prototypes make the options concrete sooner; people still decide |
+| Waiting on others | 0–5 days | 0–5 days | AI can't make a vendor or a legal team answer faster |
+| **Until it is live** | **About 3–4 weeks** | **About 1–3 weeks** | |
 
-"Done in a day" is true for the code and wrong for the feature. Most planning methods still estimate the building and treat the rest as noise. SLICE plans and estimates all of it.
+AI speeds up every part of the work, but by very different amounts: building drops by around 90%, review and decisions by a little, waiting not at all. So the slowest part moves from building to review and decisions. "Done in a day" is true for the code and wrong for the feature. SLICE plans and estimates all of it.
 
 ## What SLICE gives you
 
