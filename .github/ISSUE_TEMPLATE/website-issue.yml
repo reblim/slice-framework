@@ -1,0 +1,27 @@
+name: Website issue
+description: A broken link, typo, display problem or bug on the documentation website.
+title: "[Site] "
+labels: ["website"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: The URL or path, for example /spec/0.3.1.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      description: For example Firefox on Windows, Safari on iPhone.

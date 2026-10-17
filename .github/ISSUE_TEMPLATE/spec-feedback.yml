@@ -1,0 +1,51 @@
+name: Specification feedback
+description: A rule that is unclear, wrong or too heavy, or research that supports or contradicts SLICE.
+title: "[Spec] "
+labels: ["specification"]
+body:
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      options:
+        - v0.3.1 (current)
+        - v0.3
+        - v0.2
+        - v0.1
+    validations:
+      required: true
+  - type: input
+    id: section
+    attributes:
+      label: Section
+      description: Section number and title, for example "8.3 Evidence levels".
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind of feedback
+      options:
+        - Unclear or ambiguous
+        - Wrong or contradicted by evidence
+        - Too heavy to use in practice
+        - Missing something important
+        - New research or sources
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is the problem?
+      description: Quote the text if it helps.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What do you propose instead?
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or sources
+      description: Links, data or experience that supports your point.

@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use or adapt SLICE, please cite it as below."
+title: "SLICE Framework (working name)"
+type: software
+version: "0.3.1"
+date-released: "2026-10-16"
+authors:
+  - family-names: "Ferreira"
+    given-names: "Milber"
+repository-code: "https://github.com/reblim/slice-framework"
+license: CC-BY-4.0
+abstract: >-
+  An experimental product roadmapping, forecasting and delivery framework
+  for small, AI-assisted teams. Public alpha.
+keywords:
+  - product management
+  - roadmapping
+  - forecasting
+  - software delivery
+  - AI-assisted development

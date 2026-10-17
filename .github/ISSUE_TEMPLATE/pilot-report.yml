@@ -1,0 +1,71 @@
+name: Pilot report
+description: Share results from using SLICE with a team. Aggregated numbers only, no confidential data.
+title: "[Pilot] "
+labels: ["pilot"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for piloting SLICE. Follow the [pilot protocol](https://github.com/reblim/slice-framework/blob/main/src/content/alpha/pilot-protocol.md). Share aggregated numbers only: no company names unless you want them public, and no customer or personal data.
+  - type: dropdown
+    id: team
+    attributes:
+      label: Team size
+      options:
+        - Solo founder
+        - 2–5 people
+        - 6–15 people
+        - 16–25 people
+    validations:
+      required: true
+  - type: dropdown
+    id: context
+    attributes:
+      label: Codebase context
+      options:
+        - Greenfield
+        - Established
+        - Legacy
+        - Mixed
+    validations:
+      required: true
+  - type: input
+    id: duration
+    attributes:
+      label: Pilot duration (weeks)
+    validations:
+      required: true
+  - type: input
+    id: tools
+    attributes:
+      label: AI tools used
+      description: For example coding agents, app builders, chat assistants.
+  - type: textarea
+    id: results
+    attributes:
+      label: Results against the pilot thresholds
+      description: Coordination minutes per slice, decision latency, forecast calibration (F2 actuals inside the range), work-in-progress rule, Mode 1 card time.
+    validations:
+      required: true
+  - type: textarea
+    id: worked
+    attributes:
+      label: What worked
+  - type: textarea
+    id: failed
+    attributes:
+      label: What didn't work or took too long
+      description: If a team needed hours of explanation to use SLICE, that is a finding we want.
+    validations:
+      required: true
+  - type: textarea
+    id: changes
+    attributes:
+      label: What should change in v0.4
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Consent
+      options:
+        - label: I have permission to share these results, and they contain no confidential or personal data.
+          required: true
