@@ -125,7 +125,6 @@ export function DocumentationShell({ children }: { children: ReactNode }) {
   const [active, setActive] = useState("");
   const source = documentSource(pathname);
   const toc = source ? getToc(source) : [];
-  const wide = pathname === "/calculator";
   useEffect(() => {
     setActive("");
     const headings = Array.from(
@@ -145,31 +144,29 @@ export function DocumentationShell({ children }: { children: ReactNode }) {
         Skip to main content
       </a>
       <SiteHeader onMenu={() => setOpen(true)} />
-      <div className={`docs-shell ${wide ? "docs-shell-wide" : ""}`}>
+      <div className="docs-shell">
         <aside className="docs-left" tabIndex={0} aria-label="Documentation">
           <Sidebar close={() => setOpen(false)} />
         </aside>
         <div id="main-content" tabIndex={-1} className="docs-content">
           {children}
         </div>
-        {!wide && (
-          <aside className="docs-right" tabIndex={0}>
-            {toc.length > 0 && (
-              <nav aria-label="On this page">
-                <p className="mono-label">On this page</p>
-                <ul>
-                  {toc.map((item) => (
-                    <li key={item.id} className={item.depth === 3 ? "toc-nested" : ""}>
-                      <a href={`#${item.id}`} className={active === item.id ? "active" : ""}>
-                        {item.text}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            )}
-          </aside>
-        )}
+        <aside className="docs-right" tabIndex={0}>
+          {toc.length > 0 && (
+            <nav aria-label="On this page">
+              <p className="mono-label">On this page</p>
+              <ul>
+                {toc.map((item) => (
+                  <li key={item.id} className={item.depth === 3 ? "toc-nested" : ""}>
+                    <a href={`#${item.id}`} className={active === item.id ? "active" : ""}>
+                      {item.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+        </aside>
       </div>
       <footer className="site-footer">
         <span>{SITE_NAME} · Public alpha · Milber Ferreira, 2026</span>
