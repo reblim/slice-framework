@@ -29,7 +29,7 @@ Patch release: no rule changes. First version published in the public repository
 
 **Changed**
 
-- The public name is SLICE; "working name" is removed everywhere (decision D30).
+- The public name is SLICE Framework, SLICE for short; "working name" is removed everywhere (decision D30).
 - The homepage, README and spec opening say directly that SLICE is for planning and estimating software when AI writes the code (D31).
 - The workflow in section 10 is written out in text.
 - The pilot size in section 14 now matches the pilot protocol: 5–10 teams.

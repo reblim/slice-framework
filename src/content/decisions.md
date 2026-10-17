@@ -33,7 +33,7 @@
 | D27 | Start the alpha with invited teams; go public once the name is decided | v0.3.1 | Superseded | By D30: the name is decided and the repository is public |
 | D28 | Public name not yet decided; SLICE remains the working name | v0.3.1 | Superseded | By D30. A new name (Pensum) was recommended in the naming assessment and not chosen |
 | D29 | Pilot thresholds are exploratory; F3 is unavailable during the alpha | v0.3.1 | Active | |
-| D30 | The public name is SLICE; no trademark claim to the word; not affiliated with SliceOps | v0.3.2 | Active | Chosen by Milber over the alternatives in the naming research |
+| D30 | The public name is SLICE Framework, SLICE for short; no trademark claim to the word; not affiliated with SliceOps | v0.3.2 | Active | Chosen by Milber over the alternatives in the naming research |
 | D31 | Lead all public copy with what SLICE is for: planning and estimating software when AI writes the code. Keep "AI" out of the name | v0.3.2 | Active | The name should outlast the label; the message should not hide the reason SLICE exists |
 | D32 | Quick estimate as the default way to start: four judgment ranges summed into an F1 range. Default ranges are starting suggestions, not data | v0.3.2 | Active | The full forecast stays for teams with measured history |
 

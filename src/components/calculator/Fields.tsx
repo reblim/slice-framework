@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { ChevronDown, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,21 +10,60 @@ import { decimalNumber, } from "@/lib/calculator-inputs";
 import { formatNumber } from "@/lib/calculator";
 import { labelHelp } from "./help";
 
-export function Help({ label }: { label: string }) {
+export function Help({ label, id }: { label: string; id?: string }) {
   const [open, setOpen] = useState(false);
+  const generated = useId();
   const text = labelHelp(label);
+  const descriptionId = id ?? generated;
   if (!text) return null;
-  return <Popover open={open} onOpenChange={setOpen}><span className="inline-flex" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}><PopoverTrigger asChild><Button type="button" variant="ghost" size="icon" className="calc-help" aria-label={`About ${label}`} onFocus={() => setOpen(true)} onBlur={() => setOpen(false)}><Info size={14} /></Button></PopoverTrigger></span><PopoverContent className="max-w-[280px] text-[13px] leading-5" onOpenAutoFocus={(event) => event.preventDefault()} onCloseAutoFocus={(event) => event.preventDefault()} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>{text}</PopoverContent></Popover>;
+  const closeOnEscape = (event: KeyboardEvent) => {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    event.stopPropagation();
+    setOpen(false);
+  };
+  return <Popover open={open} onOpenChange={setOpen}><span id={descriptionId} className="sr-only">{text}</span><span className="inline-flex" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}><PopoverTrigger asChild><Button type="button" variant="ghost" size="icon" className="calc-help" aria-label={`About ${label}`} aria-describedby={descriptionId} onFocus={() => setOpen(true)} onBlur={() => setOpen(false)} onKeyDown={closeOnEscape}><Info size={14} /></Button></PopoverTrigger></span><PopoverContent className="calc-help-bubble" onOpenAutoFocus={(event) => event.preventDefault()} onCloseAutoFocus={(event) => event.preventDefault()} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)} onKeyDown={closeOnEscape}>{text}</PopoverContent></Popover>;
 }
-export function Label({ label }: { label: string }) { return <span className="inline-flex items-center gap-1 text-sm font-medium text-foreground">{label}<Help label={label} /></span>; }
-export function Field({ label, children, wide = false }: { label: string; children: ReactNode; wide?: boolean }) {
-  return <div className={`min-w-0 space-y-2 ${wide ? "sm:col-span-2" : ""}`}><Label label={label} />{children}</div>;
+export type RadioOption<T extends string> = { value: T; label: string; description?: string; meta?: string; span?: boolean };
+export function RadioGroup<T extends string>({ label, value, options, onChange, variant, className = "", describedBy, disabled = false }: { label: string; value: T | ""; options: readonly RadioOption<T>[]; onChange: (value: T) => void; variant: "cards" | "chips" | "rows"; className?: string; describedBy?: string; disabled?: boolean }) {
+  const refs = useRef<(HTMLButtonElement | null)[]>([]);
+  const selected = options.findIndex((option) => option.value === value);
+  const tabIndexFor = (index: number) => (value === "" ? index === 0 : index === selected) ? 0 : -1;
+  const move = (index: number) => {
+    const option = options[(index + options.length) % options.length];
+    if (!option || disabled) return;
+    onChange(option.value);
+    refs.current[(index + options.length) % options.length]?.focus();
+  };
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const current = refs.current.findIndex((element) => element === document.activeElement);
+    const index = current === -1 ? Math.max(selected, 0) : current;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") { event.preventDefault(); move(index + 1); }
+    else if (event.key === "ArrowLeft" || event.key === "ArrowUp") { event.preventDefault(); move(index - 1); }
+    else if (event.key === " ") { event.preventDefault(); move(index); }
+  };
+  return <div role="radiogroup" aria-label={label} aria-describedby={describedBy} className={`calc-radios calc-radios-${variant} ${className}`} onKeyDown={onKeyDown}>{options.map((option, index) => {
+    const checked = value === option.value;
+    return <button key={option.value} type="button" role="radio" aria-checked={checked} disabled={disabled} tabIndex={tabIndexFor(index)} ref={(element) => { refs.current[index] = element; }} className={`calc-radio ${option.span ? "span-full" : ""} ${checked ? "selected" : ""}`} onClick={() => onChange(option.value)}>
+      {variant === "cards" ? <><span className="calc-risk-label">{option.label}</span>{option.description ? <span className="calc-risk-desc">{option.description}</span> : null}{option.meta ? <span className="calc-days-pill">{option.meta}</span> : null}</> : variant === "rows" ? <><span className="calc-option-label">{option.label}</span>{option.meta ? <span className="calc-option-days">{option.meta}</span> : null}</> : option.label}
+    </button>;
+  })}</div>;
 }
-export function TextField({ label, value, onChange, multiline = false, wide = false, type = "text" }: { label: string; value: string; onChange: (value: string) => void; multiline?: boolean; wide?: boolean; type?: string }) {
-  return <Field label={label} wide={wide}>{multiline ? <Textarea aria-label={label} value={value} onChange={(event) => onChange(event.target.value)} rows={3} /> : <Input aria-label={label} type={type} value={value} onChange={(event) => onChange(event.target.value)} />}</Field>;
+export function Label({ label, helpId }: { label: string; helpId?: string }) { return <span className="inline-flex items-center gap-1 text-sm font-medium text-foreground">{label}<Help label={label} id={helpId} /></span>; }
+export function Field({ label, children, wide = false, helpId }: { label: string; children: ReactNode; wide?: boolean; helpId?: string }) {
+  const generated = useId();
+  const id = labelHelp(label) ? (helpId ?? generated) : undefined;
+  return <div className={`min-w-0 space-y-2 ${wide ? "sm:col-span-2" : ""}`}><Label label={label} helpId={id} />{children}</div>;
+}
+export function TextField({ label, value, onChange, multiline = false, wide = false, type = "text", placeholder }: { label: string; value: string; onChange: (value: string) => void; multiline?: boolean; wide?: boolean; type?: string; placeholder?: string }) {
+  const helpId = useId();
+  const described = labelHelp(label) ? helpId : undefined;
+  return <Field label={label} wide={wide} helpId={described}>{multiline ? <Textarea aria-label={label} aria-describedby={described} placeholder={placeholder} value={value} onChange={(event) => onChange(event.target.value)} rows={3} /> : <Input aria-label={label} aria-describedby={described} placeholder={placeholder} type={type} value={value} onChange={(event) => onChange(event.target.value)} />}</Field>;
 }
 export function Choice<T extends string>({ label, value, options, onChange }: { label: string; value: T; options: readonly T[] | readonly { value: T; label: string }[]; onChange: (value: T) => void }) {
-  return <Field label={label}><Select value={value} onValueChange={(next) => { const match = options.find((option) => (typeof option === "string" ? option : option.value) === next); if (match !== undefined) onChange(typeof match === "string" ? match : match.value); }}><SelectTrigger aria-label={label} className="w-full"><SelectValue /></SelectTrigger><SelectContent>{options.map((option) => { const key = typeof option === "string" ? option : option.value; return <SelectItem key={key} value={key}>{typeof option === "string" ? option : option.label}</SelectItem>; })}</SelectContent></Select></Field>;
+  const helpId = useId();
+  const described = labelHelp(label) ? helpId : undefined;
+  return <Field label={label} helpId={described}><Select value={value} onValueChange={(next) => { const match = options.find((option) => (typeof option === "string" ? option : option.value) === next); if (match !== undefined) onChange(typeof match === "string" ? match : match.value); }}><SelectTrigger aria-label={label} aria-describedby={described} className="w-full"><SelectValue /></SelectTrigger><SelectContent>{options.map((option) => { const key = typeof option === "string" ? option : option.value; return <SelectItem key={key} value={key}>{typeof option === "string" ? option : option.label}</SelectItem>; })}</SelectContent></Select></Field>;
 }
 export function DecimalInput({ label, value, onChange, className = "" }: { label: string; value: number; onChange: (value: number) => void; className?: string }) {
   const [raw, setRaw] = useState(value === 0 ? "" : formatNumber(value));
@@ -33,14 +72,18 @@ export function DecimalInput({ label, value, onChange, className = "" }: { label
 }
 export function NumberField({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) { return <Field label={label}><DecimalInput label={label} value={value} onChange={onChange} /></Field>; }
 export function CheckField({ label, checked, onChange, disabled = false }: { label: string; checked: boolean; onChange: (value: boolean) => void; disabled?: boolean }) {
-  return <div className="flex items-center gap-2"><label className={`flex items-center gap-3 text-sm ${disabled ? "text-muted-foreground" : ""}`}><Checkbox checked={checked} disabled={disabled} onCheckedChange={(value) => onChange(value === true)} />{label}</label><Help label={label} /></div>;
+  const helpId = useId();
+  const described = labelHelp(label) ? helpId : undefined;
+  return <div className="flex items-center gap-2"><label className={`flex items-center gap-3 text-sm ${disabled ? "text-muted-foreground" : ""}`}><Checkbox aria-describedby={described} checked={checked} disabled={disabled} onCheckedChange={(value) => onChange(value === true)} />{label}</label><Help label={label} id={described} /></div>;
 }
-export function Segmented<T extends string>({ label, value, options, onChange, disabled = false }: { label: string; value: T | ""; options: readonly { value: T; label: string; description?: string }[]; onChange: (value: T) => void; disabled?: boolean }) {
-  return <Field label={label}><div className="calc-segmented" role="group" aria-label={label}>{options.map((option) => <Button key={option.value} type="button" variant="outline" disabled={disabled} aria-pressed={value === option.value} className={value === option.value ? "selected" : ""} title={option.description} onClick={() => onChange(option.value)}>{option.label}</Button>)}</div></Field>;
+export function Segmented<T extends string>({ label, value, options, onChange, disabled = false, variant = "chips" }: { label: string; value: T | ""; options: readonly { value: T; label: string; description?: string }[]; onChange: (value: T) => void; disabled?: boolean; variant?: "cards" | "chips" }) {
+  const helpId = useId();
+  const described = labelHelp(label) ? helpId : undefined;
+  return <Field label={label} helpId={described}><RadioGroup label={label} value={value} variant={variant} describedBy={described} disabled={disabled} options={options} onChange={onChange} /></Field>;
 }
-export function Stepper({ label, value, onChange, step = 1, min = 0 }: { label: string; value: number; onChange: (value: number) => void; step?: number; min?: number }) {
+export function Stepper({ label, value, onChange, step = 1, min = 0, describedBy }: { label: string; value: number; onChange: (value: number) => void; step?: number; min?: number; describedBy?: string }) {
   const clamp = (next: number) => Math.max(min, Math.round(next / step) * step);
-  return <div className="calc-stepper" aria-label={label}><Button type="button" variant="outline" size="icon" aria-label={`Decrease ${label}`} disabled={value <= min} onClick={() => onChange(clamp(value - step))}>−</Button><span className="tabular-nums" aria-live="polite">{formatNumber(value)}</span><Button type="button" variant="outline" size="icon" aria-label={`Increase ${label}`} onClick={() => onChange(clamp(value + step))}>+</Button></div>;
+  return <div className="calc-stepper" aria-label={label} aria-describedby={describedBy}><Button type="button" variant="outline" size="icon" aria-label={`Decrease ${label}`} disabled={value <= min} onClick={() => onChange(clamp(value - step))}>−</Button><span className="tabular-nums" aria-live="polite">{formatNumber(value)}</span><Button type="button" variant="outline" size="icon" aria-label={`Increase ${label}`} onClick={() => onChange(clamp(value + step))}>+</Button></div>;
 }
 export function StepperField({ label, value, onChange, step = 1 }: { label: string; value: number; onChange: (value: number) => void; step?: number }) {
   return <Field label={label}><Stepper label={label} value={value} onChange={onChange} step={step} /></Field>;

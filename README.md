@@ -1,4 +1,4 @@
-# SLICE
+# SLICE Framework
 
 **Plan and estimate software when AI writes the code.**
 

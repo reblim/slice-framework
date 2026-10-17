@@ -22,6 +22,62 @@ export function listDocs(folder: string): { page: string; title: string }[] {
   return documentsInFolder(files, folder);
 }
 
+export type ResearchCard = { title: string; description: string; date: string; author: string };
+
+/** Date and author from the opening lines and blockquote; description is the first paragraph after it. */
+export function researchCard(source: string): ResearchCard {
+  const lines = source.split("\n");
+  let title = "";
+  const preamble: string[] = [];
+  const quote: string[] = [];
+  let phase: "title" | "preamble" | "quote" | "body" = "title";
+  const body: string[] = [];
+  for (const line of lines) {
+    if (phase === "title") {
+      const heading = /^#\s+(.+)/.exec(line);
+      if (heading) {
+        title = heading[1]!.replace(/[*_`]/g, "").trim();
+        phase = "preamble";
+      }
+      continue;
+    }
+    if (phase === "preamble") {
+      if (line.startsWith(">")) {
+        phase = "quote";
+        quote.push(line.replace(/^>\s?/, ""));
+        continue;
+      }
+      if (line.trim()) preamble.push(line.trim());
+      continue;
+    }
+    if (phase === "quote") {
+      if (line.startsWith(">")) {
+        quote.push(line.replace(/^>\s?/, ""));
+        continue;
+      }
+      if (!line.trim()) {
+        phase = "body";
+        continue;
+      }
+      phase = "body";
+    }
+    if (phase === "body") {
+      if (!line.trim()) {
+        if (body.length) break;
+        continue;
+      }
+      if (line.startsWith("#")) continue;
+      body.push(line.trim());
+    }
+  }
+  const dated = preamble.join(" ");
+  const date = dated.match(/\d{1,2}\s+[A-Za-z]+\s+\d{4}/)?.[0] ?? dated.match(/[A-Za-z]+\s+\d{4}/)?.[0] ?? "";
+  const by = quote.join(" ").replace(/\*\*/g, "").match(/By\s+([^.]+)/)?.[1]?.trim() ?? "";
+  const author = by.replace(/, with /g, " with ");
+  const description = body.join(" ").replace(/\*\*/g, "").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+  return { title, description, date, author };
+}
+
 export function documentsInFolder(sources: Record<string, string>, folder: string): { page: string; title: string }[] {
   const prefix = `/src/content/${folder}/`;
   return Object.entries(sources).flatMap(([path, source]) => {

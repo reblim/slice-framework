@@ -8,6 +8,34 @@ import { Check, Copy } from "lucide-react";
 import { useLocation } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 
+function collectText(node: ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(collectText).join("");
+  if (isValidElement(node)) return collectText((node.props as { children?: ReactNode }).children);
+  return "";
+}
+
+function tableClass(children: ReactNode): string {
+  const labels: string[] = [];
+  const nodes = Array.isArray(children) ? children : [children];
+  for (const node of nodes) {
+    if (!isValidElement(node) || node.type !== "thead") continue;
+    const rows = (node.props as { children?: ReactNode }).children;
+    for (const row of Array.isArray(rows) ? rows : [rows]) {
+      if (!isValidElement(row)) continue;
+      const cells = (row.props as { children?: ReactNode }).children;
+      for (const cell of Array.isArray(cells) ? cells : [cells]) labels.push(collectText(cell).trim());
+    }
+  }
+  if (labels[0] === "#") return "table-decisions";
+  if (labels[0] === "Version" && labels[1] === "Status" && labels[2] === "Author") return "table-versions";
+  return "";
+}
+
+function Table({ children }: { children?: ReactNode }) {
+  return <div className="table-scroll" tabIndex={0}><table className={tableClass(children)}>{children}</table></div>;
+}
+
 function findLatexSource(children: ReactNode): string | null {
   const nodes = Array.isArray(children) ? children : [children];
   for (const node of nodes) {
@@ -28,7 +56,7 @@ function MathDisplay({ source }: { source: string }) {
     () => katex.renderToString(source, { displayMode: true, throwOnError: false, strict: false }),
     [source],
   );
-  return <div className="math-display" dangerouslySetInnerHTML={{ __html: html }} />;
+  return <div className="math-display" tabIndex={0} dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 function Pre({ children }: { children?: ReactNode }) {
@@ -49,7 +77,7 @@ function CodeBlock({ children }: { children?: ReactNode }) {
   return (
     <div className="code-block">
       <div className="code-header"><span>{Array.isArray(children) ? "" : isValidElement(children) ? ((children.props as { className?: string }).className?.replace("language-", "") ?? "text") : "text"}</span><div className="flex items-center gap-2"><span role="status">{copied ? "Copied" : ""}</span><Button type="button" variant="ghost" size="icon" onClick={copy} className="code-copy" aria-label="Copy code" title="Copy code">{copied ? <Check size={14} /> : <Copy size={14} />}</Button></div></div>
-      <pre ref={ref}>{children}</pre>
+      <pre ref={ref} tabIndex={0}>{children}</pre>
     </div>
   );
 }
@@ -62,7 +90,7 @@ export function Markdown({ source }: { source: string }) {
       <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]} components={{
         pre: Pre,
         h1: ({ children, ...props }) => <><p className="article-eyebrow">{eyebrow}</p><h1 {...props}>{children}</h1></>,
-        table: ({ children }) => <div className="table-scroll"><table>{children}</table></div>,
+        table: Table,
         blockquote: ({ children }) => <blockquote className="article-callout">{children}</blockquote>,
         strong: ({ children }) => <strong className={typeof children === "string" && /^(Public alpha|Archived version)\.$/.test(children) ? "callout-label" : undefined}>{children}</strong>,
       }}>

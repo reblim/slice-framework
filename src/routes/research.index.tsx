@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SITE_NAME } from "@/config";
-import { listDocs } from "@/lib/content";
+import { getDoc, researchCard } from "@/lib/content";
+import { SIDEBAR_LABELS } from "@/lib/nav";
 
 export const Route = createFileRoute("/research/")({
   head: () => ({
@@ -17,17 +18,23 @@ export const Route = createFileRoute("/research/")({
 });
 
 function ResearchIndex() {
-  const documents = listDocs("research");
+  const documents = SIDEBAR_LABELS.research.flatMap((item) => {
+    const source = getDoc(`research/${item.page}`);
+    return source ? [{ page: item.page, ...researchCard(source) }] : [];
+  });
   return (
-    <main className="mx-auto max-w-[72ch] px-4 py-10">
-      <h1 className="text-3xl font-semibold">Research</h1>
+    <main className="research-index">
+      <p className="article-eyebrow">Research</p>
+      <h1>Research</h1>
       {documents.length === 0 ? (
-        <p className="mt-6 text-muted-foreground">Research documents coming soon.</p>
+        <p className="text-muted-foreground">Research documents coming soon.</p>
       ) : (
-        <ul className="mt-6 divide-y divide-border">
-          {documents.map(({ page, title }) => (
-            <li key={page} className="py-3">
-              <Link to="/research/$page" params={{ page }} className="underline underline-offset-4">{title}</Link>
+        <ul className="research-list">
+          {documents.map(({ page, title, description, date, author }) => (
+            <li key={page}>
+              <Link to="/research/$page" params={{ page }} className="research-title">{title}</Link>
+              {description ? <p className="research-desc">{description}</p> : null}
+              <p className="research-meta">{[date, author].filter(Boolean).join(" · ")}</p>
             </li>
           ))}
         </ul>
