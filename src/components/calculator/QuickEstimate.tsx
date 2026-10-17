@@ -8,7 +8,7 @@ import { formatNumber } from "@/lib/calculator";
 
 const rangeText = (range: Range | null) => range ? (range.low === range.high ? `${formatNumber(range.low)} d` : `${formatNumber(range.low)}–${formatNumber(range.high)} d`) : "";
 
-export function QuickEstimate({ onContinue }: { onContinue: (answers: QuickAnswers) => void }) {
+export function QuickEstimate({ onContinue }: { onContinue: (answers: QuickAnswers, overrides: RangeOverrides) => void }) {
   const [answers, setAnswers] = useState<QuickAnswers>(EMPTY_QUICK);
   const [overrides, setOverrides] = useState<RangeOverrides>(NO_OVERRIDES);
   useEffect(() => { setOverrides(loadOverrides()); }, []);
@@ -67,7 +67,7 @@ export function QuickEstimate({ onContinue }: { onContinue: (answers: QuickAnswe
         <p className="mt-4 text-sm">Building is {result.buildPercent}% of the time. The rest is proving it works and deciding.</p>
         <div className="mt-4 flex flex-wrap items-center gap-3"><code className="min-w-0 flex-1 break-words rounded border border-border bg-muted px-3 py-2 text-xs" data-testid="quick-copy-line">{quickCopyLine(answers, result)}</code><Button variant="outline" size="icon" title="Copy estimate line" aria-label="Copy estimate line" onClick={copy}>{copied ? <Check size={16} /> : <Copy size={16} />}</Button></div>
         <p className="mt-3 text-xs text-muted-foreground">F1 is a judgment estimate. After 7 similar finished pieces of work, use the Full SLICE forecast for a measured range.</p>
-        <Button className="mt-4" onClick={() => onContinue(answers)}>Continue in Full SLICE forecast<ArrowRight size={16} /></Button>
+        <Button className="mt-4" onClick={() => onContinue(answers, overrides)}>Continue in Full SLICE forecast<ArrowRight size={16} /></Button>
       </>}
     </section>
   </div>;

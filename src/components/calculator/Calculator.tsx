@@ -38,8 +38,7 @@ function saveTab(tab: string) { try { localStorage.setItem(TAB_KEY, tab); } catc
 
 export function Calculator() {
   const [tab, setTab] = useState<"quick" | "full">("quick");
-  const [ready, setReady] = useState(false);
-  useMemo(() => { if (!ready) { setTab(loadTab()); setReady(true); } }, [ready]);
+  useEffect(() => { setTab(loadTab()); }, []);
   const switchTab = (next: "quick" | "full") => { setTab(next); saveTab(next); };
 
   const [slice, setSlice] = useState<Slice>(EMPTY_SLICE);
@@ -83,8 +82,8 @@ export function Calculator() {
   const load = (example: boolean) => {
     setSlice(example ? EXAMPLE_SLICE : EMPTY_SLICE); setEvidence(example ? [...EXAMPLE_EVIDENCE] : []); setEvidenceOther(""); setDrafts(example ? importHistory(EXAMPLE_CSV).rows : []); setHasHistory(example); setLastChange(example ? "2026-07-01" : ""); setNoMajorChange(false); setMatchLeverage(false); setScenarios(example ? EMPTY_SCENARIOS : EMPTY_SCENARIOS); setAssumptions(example ? "The managed auth provider stays within its current limits and the tech lead can review within one working day." : ""); setCommitment(example ? EXAMPLE_COMMITMENT : EMPTY_COMMITMENT); setOutcome({ count: "", of: "", unit: "users", action: "", days: "" }); setFlow(example ? EXAMPLE_FLOW : EMPTY_FLOW); setThroughputNote(""); setCopied(false); setCopySelected(false); setTouched(new Set()); setResetKey((key) => key + 1);
   };
-  const continueFromQuick = (answers: QuickAnswers) => {
-    const result = quickResult(answers, NO_OVERRIDES);
+  const continueFromQuick = (answers: QuickAnswers, overrides: RangeOverrides) => {
+    const result = quickResult(answers, overrides);
     setSlice({ ...EMPTY_SLICE, title: quickFeatureName(answers), risk: answers.risk || "Medium" });
     if (result.kind === "ready") setScenarios(quickScenarios(result));
     setTouched(new Set([1, 2]));
