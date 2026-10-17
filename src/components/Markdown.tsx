@@ -7,6 +7,19 @@ import { isValidElement, useMemo, useRef, useState, type ReactNode } from "react
 import { Check, Copy } from "lucide-react";
 import { useLocation } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
+import { SITE_ORIGIN } from "@/config";
+
+function opensInNewWindow(href: string) {
+  try {
+    const url = new URL(href, SITE_ORIGIN);
+    return (
+      (url.protocol === "http:" || url.protocol === "https:") &&
+      url.hostname !== "sliceframework.org"
+    );
+  } catch {
+    return false;
+  }
+}
 
 function collectText(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
@@ -146,6 +159,16 @@ export function Markdown({ source }: { source: string }) {
               <h1 {...props}>{children}</h1>
             </>
           ),
+          a: ({ href, children, ...props }) =>
+            href && opensInNewWindow(href) ? (
+              <a href={href} {...props} target="_blank" rel="noopener noreferrer">
+                {children}
+              </a>
+            ) : (
+              <a href={href} {...props}>
+                {children}
+              </a>
+            ),
           table: Table,
           blockquote: ({ children }) => (
             <blockquote className="article-callout">{children}</blockquote>
