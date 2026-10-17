@@ -3,7 +3,7 @@ import { Check, Copy, RotateCcw, FlaskConical, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Help, RadioGroup, Stepper } from "./Fields";
-import { BUILD_OPTIONS, DECISION_OPTIONS, EXTERNAL_OPTIONS, EMPTY_QUICK, FEATURES, HIGH_RISK_FEATURES, loadOverrides, NO_OVERRIDES, QUICK_EXAMPLE, quickCopyLine, quickFeatureName, quickResult, RISK_OPTIONS, saveOverrides, type QuickAnswers, type RangeOverrides, type Range } from "@/lib/quick-estimate";
+import { BUILD_OPTIONS, calendarISO, DECISION_OPTIONS, EXTERNAL_OPTIONS, EMPTY_QUICK, FEATURE_GROUPS, FEATURE_GUIDANCE, loadOverrides, liveRange, NO_OVERRIDES, QUICK_EXAMPLE, quickCopyLine, quickFeatureName, quickResult, RISK_OPTIONS, saveOverrides, type FeatureKey, type QuickAnswers, type RangeOverrides, type Range } from "@/lib/quick-estimate";
 import { formatNumber } from "@/lib/calculator";
 
 const rangeText = (range: Range | null) => {
@@ -15,44 +15,51 @@ const rangeText = (range: Range | null) => {
 export function QuickEstimate({ onContinue }: { onContinue: (answers: QuickAnswers, overrides: RangeOverrides) => void }) {
   const [answers, setAnswers] = useState<QuickAnswers>(EMPTY_QUICK);
   const [overrides, setOverrides] = useState<RangeOverrides>(NO_OVERRIDES);
-  useEffect(() => { setOverrides(loadOverrides()); }, []);
+  const [startDate, setStartDate] = useState("");
+  useEffect(() => { setOverrides(loadOverrides()); setStartDate(calendarISO(new Date())); }, []);
   const result = useMemo(() => quickResult(answers, overrides), [answers, overrides]);
   const [copied, setCopied] = useState(false);
   const update = <K extends keyof QuickAnswers>(key: K, value: QuickAnswers[K]) => setAnswers((current) => {
     const next = { ...current, [key]: value };
-    if (key === "feature" && HIGH_RISK_FEATURES.includes(value as QuickAnswers["feature"])) next.risk = "High";
+    if (key === "feature") { const preset = FEATURE_GUIDANCE[value as FeatureKey]?.risk; if (preset) next.risk = preset; }
     return next;
   });
   const setRange = (group: keyof RangeOverrides, key: string, range: Range) => setOverrides((current) => { const next = { ...current, [group]: { ...current[group], [key]: range } }; saveOverrides(next); return next; });
   const copy = async () => { if (result.kind !== "ready") return; try { await navigator.clipboard.writeText(quickCopyLine(answers, result)); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { /* clipboard unavailable */ } };
   const buildHelp = useId();
-  const highRiskNote = HIGH_RISK_FEATURES.includes(answers.feature) ? "Logins and payments are always high risk." : undefined;
+  const guidance = FEATURE_GUIDANCE[answers.feature];
+  const featureOptions = [...FEATURE_GROUPS.flatMap((group) => group.features.map((feature) => ({ value: feature.key, label: feature.label, group: group.label }))), { value: "other" as const, label: "Something else", span: true }];
+  const live = result.kind === "ready" ? liveRange(startDate, result.low, result.high) : null;
   return <div className="calc-quick">
     <p className="text-base leading-7 text-muted-foreground">AI makes building fast. Reviewing, deciding and waiting still take time. This adds it all up.</p>
-    <div className="my-6 flex flex-wrap gap-3"><Button variant="outline" onClick={() => setAnswers(QUICK_EXAMPLE)}><FlaskConical size={16} />Try example: authentication</Button><Button variant="ghost" onClick={() => setAnswers(EMPTY_QUICK)}><RotateCcw size={16} />Reset</Button></div>
+    <div className="my-6 flex flex-wrap gap-3"><Button variant="outline" onClick={() => setAnswers(QUICK_EXAMPLE)}><FlaskConical size={16} />Try example: authentication</Button><Button variant="ghost" onClick={() => { setAnswers(EMPTY_QUICK); setStartDate(calendarISO(new Date())); }}><RotateCcw size={16} />Reset</Button></div>
 
     <section className="calc-step"><h2 className="text-base font-semibold">1. What are you building?</h2><div className="mt-4 space-y-3">
-      <RadioGroup label="Feature" variant="chips" value={answers.feature} options={FEATURES.map((feature) => ({ value: feature.key, label: feature.label, span: feature.key === "other" }))} onChange={(value) => update("feature", value)} />
+      <RadioGroup label="Feature" variant="chips" value={answers.feature} options={featureOptions} onChange={(value) => update("feature", value)} />
       {answers.feature === "other" && <Input aria-label="Feature name" placeholder="e.g. Team roles and permissions" value={answers.featureText} onChange={(event) => update("featureText", event.target.value)} />}
+      {guidance?.note && <p className="text-sm text-muted-foreground">{guidance.note}</p>}
     </div></section>
 
     <section className="calc-step"><h2 className="flex items-center gap-1 text-base font-semibold">2. How long does building take with AI?<Help label="Build time with AI" id={buildHelp} /></h2><div className="mt-4">
       <RadioGroup label="Build time with AI" describedBy={buildHelp} variant="rows" value={answers.build} options={BUILD_OPTIONS.map((option) => ({ value: option.key, label: option.label, meta: rangeText(option.range) }))} onChange={(value) => update("build", value)} />
+      <p className="mt-3 text-sm text-muted-foreground">Building in old or fragile code? AI helps less there, so pick a longer option.</p>
       {answers.build === "bigger" && <p role="status" className="mt-3 text-sm calc-warning-text">That's too big for one estimate. Split it into smaller pieces first.</p>}
     </div></section>
 
     <section className="calc-step"><h2 className="text-base font-semibold">3. How risky is it?</h2><div className="mt-4">
       <RadioGroup label="Risk" variant="cards" value={answers.risk} options={RISK_OPTIONS.map((option) => ({ value: option.key, label: option.label, description: option.description, meta: rangeText(option.range) }))} onChange={(value) => update("risk", value)} />
-    </div>{answers.risk === "High" && <p className="mt-3 text-sm text-muted-foreground">{highRiskNote ?? RISK_OPTIONS[2]?.note}</p>}</section>
+    </div>{answers.risk === "High" && !guidance?.note && <p className="mt-3 text-sm text-muted-foreground">{RISK_OPTIONS[2]?.note}</p>}</section>
 
-    <section className="calc-step"><h2 className="text-base font-semibold">4. Is anything still undecided?</h2><div className="mt-4">
-      <RadioGroup label="Undecided" variant="rows" value={answers.decision} options={DECISION_OPTIONS.map((option) => ({ value: option.key, label: option.label, meta: rangeText(option.range) }))} onChange={(value) => update("decision", value)} />
-      {answers.decision === "big" && <p role="status" className="mt-3 text-sm calc-warning-text">Decide first. Run a quick test or make the call, then estimate.</p>}
+    <section className="calc-step"><h2 className="text-base font-semibold">4. What still needs deciding or designing?</h2><div className="mt-4">
+      <RadioGroup label="Decisions and design" variant="rows" value={answers.decision} options={DECISION_OPTIONS.map((option) => ({ value: option.key, label: option.label, meta: option.range ? rangeText(option.range) : "Decide first" }))} onChange={(value) => update("decision", value)} />
+      {answers.decision === "big" && <p role="status" className="mt-3 text-sm calc-warning-text">Decide first, or run a Mode E experiment. Then estimate.</p>}
     </div></section>
 
     <section className="calc-step"><h2 className="text-base font-semibold">5. Waiting on anyone outside the team?</h2><div className="mt-4">
       <RadioGroup label="Waiting" variant="rows" value={answers.external} options={EXTERNAL_OPTIONS.map((option) => ({ value: option.key, label: option.label, meta: rangeText(option.range) }))} onChange={(value) => update("external", value)} />
-    </div></section>
+      <p className="mt-3 text-sm text-muted-foreground">For example a vendor, another team, a customer, app store review, a security review or legal approval.</p>
+    </div>
+    <div className="mt-4 max-w-xs space-y-2"><label className="text-sm font-medium text-foreground" htmlFor="quick-start-date">Start date</label><input id="quick-start-date" type="date" className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm" value={startDate} onChange={(event) => setStartDate(event.target.value)} /></div></section>
 
     <details className="calc-details"><summary>Adjust the suggested days</summary><p className="mt-2 text-xs text-muted-foreground">Starting suggestions. Change them to fit your team.</p><div className="mt-4 space-y-3">
       {BUILD_OPTIONS.filter((option) => option.range).map((option) => <div key={option.key} className="flex items-center justify-between gap-3 text-sm"><span>{option.label}</span><span className="flex items-center gap-2"><Stepper label={`${option.label} low`} step={0.25} value={overrides.build[option.key as "day"]?.low ?? option.range!.low} onChange={(value) => setRange("build", option.key, { low: value, high: overrides.build[option.key as "day"]?.high ?? option.range!.high })} /><Stepper label={`${option.label} high`} step={0.25} value={overrides.build[option.key as "day"]?.high ?? option.range!.high} onChange={(value) => setRange("build", option.key, { low: overrides.build[option.key as "day"]?.low ?? option.range!.low, high: value })} /></span></div>)}
@@ -66,8 +73,11 @@ export function QuickEstimate({ onContinue }: { onContinue: (answers: QuickAnswe
       {result.kind === "undecided" && <p className="text-lg">Not estimated yet · F0</p>}
       {result.kind === "ready" && <>
         <p className="text-3xl font-semibold tabular-nums" data-testid="quick-result">{result.low}–{result.high} working days until it's live</p>
-        <div className="mt-4 flex h-5 w-full overflow-hidden rounded" aria-label="Time breakdown">{result.parts.map((part, index) => { const totalMid = result.parts.reduce((acc, item) => acc + (item.range.low + item.range.high) / 2, 0); const mid = (part.range.low + part.range.high) / 2; return <svg key={part.label} width={totalMid ? `${mid / totalMid * 100}%` : "0%"} height="20" className={`calc-segment-${index}`}><rect width="100%" height="100%" fill="currentColor" /><title>{`${part.label}: ${formatNumber(mid)} days`}</title></svg>; })}</div>
+        {live && <p className="mt-2 text-sm" data-testid="quick-live">Likely live between {live.from} and {live.to}</p>}
+        {live && <p className="mt-1 text-xs text-muted-foreground">Weekends skipped; public holidays and part-time work not included.</p>}
+        <div className="calc-breakdown mt-4" aria-label="Time breakdown">{result.parts.map((part, index) => { const mid = (part.range.low + part.range.high) / 2; return mid > 0 ? <span key={part.label} className={`calc-segment-${index}`} style={{ flexGrow: mid }} title={`${part.label}: ${formatNumber(part.range.low)}–${formatNumber(part.range.high)} days`} /> : null; })}</div>
         <ul className="mt-2 space-y-1 text-xs">{result.parts.map((part, index) => <li key={part.label} className="flex items-center justify-between gap-3"><span className="flex gap-2"><span className={`calc-segment-${index} mt-1 size-2 shrink-0 bg-current`} />{part.label}</span><span className="tabular-nums">{formatNumber(part.range.low)}–{formatNumber(part.range.high)} days</span></li>)}</ul>
+        <p className="mt-4 text-sm text-muted-foreground">These are days of work and waiting for one slice. If the team juggles several things at once, the calendar time is longer. The full forecast's flow check shows that.</p>
         <p className="mt-4 text-sm">Building is {result.buildPercent}% of the time. The rest is proving it works and deciding.</p>
         <div className="mt-4 flex flex-wrap items-center gap-3"><code className="min-w-0 flex-1 break-words rounded border border-border bg-muted px-3 py-2 text-xs" data-testid="quick-copy-line">{quickCopyLine(answers, result)}</code><Button variant="outline" size="icon" title="Copy estimate line" aria-label="Copy estimate line" onClick={copy}>{copied ? <Check size={16} /> : <Copy size={16} />}</Button></div>
         <p className="mt-3 text-xs text-muted-foreground">F1 is a judgment estimate. After 7 similar finished pieces of work, use the Full SLICE forecast for a measured range.</p>

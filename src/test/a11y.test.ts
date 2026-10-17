@@ -32,7 +32,18 @@ async function audit(page: Page, path: string, theme: "light" | "dark", tab?: st
   await page.evaluate((mode) => {
     document.documentElement.classList.toggle("dark", mode === "dark");
   }, theme);
-  if (tab) await page.getByRole("tab", { name: tab }).click();
+  if (tab && tab !== "example") await page.getByRole("tab", { name: tab }).click();
+  if (tab === "example") {
+    await page.getByRole("tab", { name: "Quick estimate" }).click();
+    await page.getByRole("button", { name: "Try example: authentication" }).click();
+    await expectClean(page);
+    await page.getByRole("tab", { name: "Full SLICE forecast" }).click();
+    await page.getByRole("button", { name: "Try example: authentication" }).click();
+  }
+  await expectClean(page);
+}
+
+async function expectClean(page: Page) {
   const results = await new AxeBuilder({ page }).analyze();
   const serious = results.violations.filter((violation) => violation.impact === "serious" || violation.impact === "critical");
   expect(serious.map((violation) => `${violation.id}: ${violation.help}`)).toEqual([]);
@@ -64,9 +75,12 @@ describe("accessibility", () => {
       const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
       const page = await context.newPage();
       await audit(page, path, theme);
-      if (path === "/calculator") await audit(page, path, theme, "Full SLICE forecast");
+      if (path === "/calculator") {
+        await audit(page, path, theme, "Full SLICE forecast");
+        await audit(page, path, theme, "example");
+      }
       await context.close();
     },
-    60_000,
+    120_000,
   );
 });

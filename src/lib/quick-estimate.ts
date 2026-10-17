@@ -1,22 +1,46 @@
 export type Range = { low: number; high: number };
-export type FeatureKey = "authentication" | "payments" | "settings" | "admin" | "upload" | "email" | "search" | "import" | "integration" | "other";
+export type FeatureKey = "authentication" | "payments" | "settings" | "admin" | "search" | "email" | "upload" | "mobile" | "api" | "database" | "integration" | "import" | "reports" | "ai" | "infra" | "bug" | "refactor" | "performance" | "other";
 export type BuildKey = "half-day" | "day" | "two-three" | "week" | "bigger";
 export type QuickRisk = "Low" | "Medium" | "High";
 export type DecisionKey = "clear" | "few" | "big";
 export type ExternalKey = "none" | "one" | "several";
 
-export const FEATURES: { key: FeatureKey; label: string }[] = [
-  { key: "authentication", label: "Authentication (sign-up, sign-in, password reset)" },
-  { key: "payments", label: "Payments or checkout" },
-  { key: "settings", label: "Settings or profile page" },
-  { key: "admin", label: "Admin dashboard" },
-  { key: "upload", label: "File upload" },
-  { key: "email", label: "Email or notifications" },
-  { key: "search", label: "Search" },
-  { key: "import", label: "Data import or export" },
-  { key: "integration", label: "Third-party integration" },
-  { key: "other", label: "Something else" },
+export const FEATURE_GROUPS: { label: string; features: { key: FeatureKey; label: string }[] }[] = [
+  { label: "Product", features: [
+    { key: "authentication", label: "Authentication (sign-up, sign-in, password reset)" },
+    { key: "payments", label: "Payments or checkout" },
+    { key: "settings", label: "Settings or profile page" },
+    { key: "admin", label: "Admin dashboard" },
+    { key: "search", label: "Search" },
+    { key: "email", label: "Email or notifications" },
+    { key: "upload", label: "File upload" },
+    { key: "mobile", label: "Mobile app screen" },
+  ] },
+  { label: "Data and platform", features: [
+    { key: "api", label: "API or backend endpoint" },
+    { key: "database", label: "Database change or migration" },
+    { key: "integration", label: "Third-party integration" },
+    { key: "import", label: "Data import or export" },
+    { key: "reports", label: "Reports or analytics" },
+    { key: "ai", label: "AI feature (uses a language model)" },
+    { key: "infra", label: "Infrastructure or deployment (hosting, CI, monitoring)" },
+  ] },
+  { label: "Maintenance", features: [
+    { key: "bug", label: "Bug fix" },
+    { key: "refactor", label: "Refactor or upgrade" },
+    { key: "performance", label: "Performance improvement" },
+  ] },
 ];
+export const FEATURES: { key: FeatureKey; label: string }[] = [...FEATURE_GROUPS.flatMap((group) => group.features), { key: "other", label: "Something else" }];
+export const FEATURE_GUIDANCE: Partial<Record<FeatureKey, { risk?: QuickRisk; note: string }>> = {
+  authentication: { risk: "High", note: "Logins and payments are always high risk." },
+  payments: { risk: "High", note: "Logins and payments are always high risk." },
+  database: { risk: "High", note: "Migrations are hard to undo: test on a copy of real data first." },
+  ai: { risk: "Medium", note: "Model output varies: check it on real examples before you call it done." },
+  infra: { risk: "Medium", note: "Plan how to roll back." },
+  bug: { note: "If the cause is still unknown, choose 'Big open questions' or time-box an investigation first." },
+  refactor: { note: "Keep it separate from feature work so review stays small." },
+};
 export const BUILD_OPTIONS: { key: BuildKey; label: string; range: Range | null }[] = [
   { key: "half-day", label: "Under half a day", range: { low: 0.25, high: 0.5 } },
   { key: "day", label: "About a day", range: { low: 0.5, high: 1.5 } },
@@ -30,8 +54,8 @@ export const RISK_OPTIONS: { key: QuickRisk; label: string; description: string;
   { key: "High", label: "High", description: "Money, logins, personal data, or hard to undo", range: { low: 2, high: 5 }, note: "Needs review by someone who didn't build it. Tip: a managed provider (hosted payments, managed auth) lowers the risk." },
 ];
 export const DECISION_OPTIONS: { key: DecisionKey; label: string; range: Range | null }[] = [
-  { key: "clear", label: "Clear", range: { low: 0, high: 0.5 } },
-  { key: "few", label: "A few open questions", range: { low: 1, high: 3 } },
+  { key: "clear", label: "Nothing, it's clear", range: { low: 0, high: 0.5 } },
+  { key: "few", label: "Some questions or screens to design", range: { low: 1, high: 3 } },
   { key: "big", label: "Big open questions", range: null },
 ];
 export const EXTERNAL_OPTIONS: { key: ExternalKey; label: string; range: Range }[] = [
@@ -66,8 +90,7 @@ export function externalRange(key: ExternalKey, overrides: RangeOverrides): Rang
 }
 
 export type QuickAnswers = { feature: FeatureKey; featureText: string; build: BuildKey | ""; risk: QuickRisk | ""; decision: DecisionKey | ""; external: ExternalKey | "" };
-export const EMPTY_QUICK: QuickAnswers = { feature: "authentication", featureText: "", build: "", risk: "", decision: "", external: "" };
-export const HIGH_RISK_FEATURES: FeatureKey[] = ["authentication", "payments"];
+export const EMPTY_QUICK: QuickAnswers = { feature: "authentication", featureText: "", build: "", risk: "High", decision: "", external: "" };
 
 export const roundHalf = (value: number) => Math.round(value * 2) / 2;
 export const midpoint = (range: Range) => (range.low + range.high) / 2;
@@ -126,6 +149,44 @@ export function loadOverrides(): RangeOverrides {
     return NO_OVERRIDES;
   }
 }
+const CALENDAR_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+export function calendarISO(today: Date): string {
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${today.getFullYear()}-${month}-${day}`;
+}
+
+/** Completion date after `workingDays`, counting Monday–Friday and rounding up. The start date is the first working day when it is a weekday. */
+export function addWorkingDays(start: Date, workingDays: number): Date {
+  const whole = Math.max(0, Math.ceil(workingDays));
+  const cursor = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+  const weekday = () => cursor.getDay() !== 0 && cursor.getDay() !== 6;
+  if (whole === 0) {
+    while (!weekday()) cursor.setDate(cursor.getDate() + 1);
+    return cursor;
+  }
+  let counted = 0;
+  while (counted < whole) {
+    if (weekday()) counted += 1;
+    if (counted < whole) cursor.setDate(cursor.getDate() + 1);
+  }
+  return cursor;
+}
+
+export function formatCalendarDate(date: Date): string {
+  return `${date.getDate()} ${CALENDAR_MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+export function liveRange(startISO: string, low: number, high: number): { from: string; to: string } | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(startISO)) return null;
+  const [year, month, day] = startISO.split("-").map(Number);
+  if (!year || !month || !day) return null;
+  const start = new Date(year, month - 1, day);
+  if (start.getFullYear() !== year || start.getMonth() !== month - 1 || start.getDate() !== day) return null;
+  return { from: formatCalendarDate(addWorkingDays(start, low)), to: formatCalendarDate(addWorkingDays(start, high)) };
+}
+
 export function saveOverrides(overrides: RangeOverrides) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));

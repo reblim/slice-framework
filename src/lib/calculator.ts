@@ -85,7 +85,7 @@ export const planning: Record<Mode, { output: string; time: string }> = {
   "3": { output: "Reviewed design and test plan", time: "Risk-governed, no ceiling" },
 };
 export function classificationWarnings(slice: Slice): string[] {
-  return [slice.mode === "3" ? "Mode 3 is High risk for verification" : "", slice.size === "XL" ? "Split it before review, not after." : "", slice.itemType === "Improvement" && ["L", "XL"].includes(slice.size) ? "Customer-facing work with uncertain value, or work above the appetite, must be a Bet." : "", slice.mode === "E" ? "Forecast the experiment and its decision date, not the build." : ""].filter(Boolean);
+  return [slice.mode === "3" ? "Mode 3 is always High risk for verification." : "", slice.size === "XL" ? "Split it before review, not after." : "", slice.itemType === "Improvement" && ["L", "XL"].includes(slice.size) ? "Customer-facing work with uncertain value, or work above the appetite, must be a Bet." : "", slice.mode === "E" ? "Forecast the experiment and its decision date, not the build." : ""].filter(Boolean);
 }
 export function externalLabel(slice: Slice, commitment: Commitment, level: Level, count: number) {
   const evidence = level === "F2" ? `F2 (n=${count})` : level === "F0" ? "F0 · not estimated" : "F1";
@@ -127,21 +127,66 @@ export function sliceCard(slice: Slice, commitment: Commitment, level: Level, ro
   return `---\nid: SL-NEW\nroadmap_item: ${scalar(slice.item)}\ntitle: ${scalar(slice.title)}\nmode: ${scalar(slice.mode)}\nsize: ${slice.size}\nwork_type: ${slice.workType}\nforecast: ${scalar(forecast)}\nrisk: ${risk}\nai_leverage: ${slice.leverage}\nevidence_level: ${level}\nstate: ready\n---\n## Acceptance evidence\n${slice.acceptance}\n\n## Verification tier and reviewer\n${risk}: ${verification[risk]}\nReviewer: to be assigned\n\n## Forecast basis (reference class, range or scenarios, assumptions, external label)\nReference class: ${slice.size} / ${slice.workType} / Mode ${slice.mode} / ${slice.context}\n${forecast}\n${level === "F1" ? `Optimistic: ${total(scenarios.Optimistic)}; Expected: ${total(scenarios.Expected)}; Conservative: ${total(scenarios.Conservative)} working days\n` : ""}Assumptions: ${assumptions}\nExternal label: ${externalLabel(slice, commitment, level, rows.length)}${slice.itemType === "Bet" ? `\nOutcome · ${slice.item} · ${commitment.outcomeLevel} · ${commitment.criterion}\nDelivery and outcome are never merged into one confidence figure.` : ""}`;
 }
 
-export const EXAMPLE_CSV = `slice,size,work_type,mode,context,started,accepted,review_wait_hours,decision_latency_hours
-SL-021,M,integration,3,established,2026-05-11,2026-05-25,40,16
-SL-030,M,integration,3,established,2026-07-02,2026-07-13,30,10
-SL-032,S,ui,1,established,2026-07-06,2026-07-09,6,0
-SL-033,M,integration,3,established,2026-07-14,2026-07-21,20,6
-SL-035,M,integration,3,established,2026-07-22,2026-08-07,62,30
-SL-037,M,integration,3,established,2026-08-04,2026-08-13,28,8
-SL-039,L,data,2,established,2026-08-10,2026-08-28,48,20
-SL-040,M,integration,3,established,2026-08-17,2026-08-31,44,22
-SL-042,M,integration,3,established,2026-08-31,2026-09-08,24,4
-SL-044,M,integration,3,established,2026-09-07,2026-09-17,32,12
-SL-046,M,integration,3,established,2026-09-21,2026-10-02,36,14
-SL-048,M,integration,3,established,2026-10-01,2026-10-12,30,10`;
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+/** This week, next week, the next six months, then the next three calendar quarters. */
+export function nextPeriods(today: Date): string[] {
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const months = Array.from({ length: 6 }, (_, index) => {
+    const cursor = month + 1 + index;
+    return `${MONTHS[cursor % 12]} ${year + Math.floor(cursor / 12)}`;
+  });
+  const quarter = Math.floor(month / 3);
+  const quarters = Array.from({ length: 3 }, (_, index) => {
+    const cursor = quarter + 1 + index;
+    return `Q${(cursor % 4) + 1} ${year + Math.floor(cursor / 4)}`;
+  });
+  return ["This week", "Next week", ...months, ...quarters];
+}
+
+export function monthAfter(today: Date): string {
+  return nextPeriods(today)[2] ?? "";
+}
+
+function calendarISO(today: Date, dayOffset: number): string {
+  const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + dayOffset);
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+/** Day offsets from the latest accepted date. The latest accepted date is placed five days before `today`. */
+const EXAMPLE_OFFSETS: { slice: string; size: string; work: string; mode: string; context: string; started: number; accepted: number; review: number; decision: number }[] = [
+  { slice: "SL-021", size: "M", work: "integration", mode: "3", context: "established", started: -154, accepted: -140, review: 40, decision: 16 },
+  { slice: "SL-030", size: "M", work: "integration", mode: "3", context: "established", started: -102, accepted: -91, review: 30, decision: 10 },
+  { slice: "SL-032", size: "S", work: "ui", mode: "1", context: "established", started: -98, accepted: -95, review: 6, decision: 0 },
+  { slice: "SL-033", size: "M", work: "integration", mode: "3", context: "established", started: -90, accepted: -83, review: 20, decision: 6 },
+  { slice: "SL-035", size: "M", work: "integration", mode: "3", context: "established", started: -82, accepted: -66, review: 62, decision: 30 },
+  { slice: "SL-037", size: "M", work: "integration", mode: "3", context: "established", started: -69, accepted: -60, review: 28, decision: 8 },
+  { slice: "SL-039", size: "L", work: "data", mode: "2", context: "established", started: -63, accepted: -45, review: 48, decision: 20 },
+  { slice: "SL-040", size: "M", work: "integration", mode: "3", context: "established", started: -56, accepted: -42, review: 44, decision: 22 },
+  { slice: "SL-042", size: "M", work: "integration", mode: "3", context: "established", started: -42, accepted: -34, review: 24, decision: 4 },
+  { slice: "SL-044", size: "M", work: "integration", mode: "3", context: "established", started: -35, accepted: -25, review: 32, decision: 12 },
+  { slice: "SL-046", size: "M", work: "integration", mode: "3", context: "established", started: -21, accepted: -10, review: 36, decision: 14 },
+  { slice: "SL-048", size: "M", work: "integration", mode: "3", context: "established", started: -11, accepted: 0, review: 30, decision: 10 },
+];
+const EXAMPLE_CHANGE_OFFSET = -103;
+
+export function exampleHistory(today: Date): { csv: string; lastChange: string } {
+  const anchor = -5;
+  const lines = EXAMPLE_OFFSETS.map((row) => [row.slice, row.size, row.work, row.mode, row.context, calendarISO(today, anchor + row.started), calendarISO(today, anchor + row.accepted), row.review, row.decision].join(","));
+  return {
+    csv: `slice,size,work_type,mode,context,started,accepted,review_wait_hours,decision_latency_hours\n${lines.join("\n")}`,
+    lastChange: calendarISO(today, anchor + EXAMPLE_CHANGE_OFFSET),
+  };
+}
+
 export const EXAMPLE_EVIDENCE = ["Automated tests pass", "Independent security review", "Works in staging"];
 export const EXAMPLE_SLICE: Slice = { item: "User accounts", itemType: "Obligation", title: "Email and password sign-in with a managed auth provider", mode: "3", size: "M", workType: "integration", context: "established", risk: "High", leverage: "High", acceptance: EXAMPLE_EVIDENCE.join("; ") };
 export const EXAMPLE_SCENARIOS: Scenarios = { Optimistic: { active: 2, review: 1, decision: 0, external: 0 }, Expected: { active: 4, review: 2, decision: 1, external: 0 }, Conservative: { active: 6, review: 3, decision: 2, external: 1 } };
-export const EXAMPLE_COMMITMENT: Commitment = { type: "Target", when: "November", decider: "Tech lead", riskAccepted: false, outcomeLevel: "F1", criterion: "" };
+export const EXAMPLE_COMMITMENT: Commitment = { type: "Target", when: "", decider: "Tech lead", riskAccepted: false, outcomeLevel: "F1", criterion: "" };
+export function exampleCommitment(today: Date): Commitment {
+  return { ...EXAMPLE_COMMITMENT, when: monthAfter(today) };
+}
 export const EXAMPLE_FLOW: Flow = { constraint: "Verification", waiting: 2, clears: 3, wip: 4, throughput: 2 };

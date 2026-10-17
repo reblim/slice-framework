@@ -1,8 +1,9 @@
-import { describe, expect, it } from "vitest";
-import { classificationWarnings, comparableHistory, conformance, coverage, dateValue, deliveryForecast, effectiveRisk, evidenceLevel, EXAMPLE_COMMITMENT, EXAMPLE_CSV, EXAMPLE_FLOW, EXAMPLE_SCENARIOS, EXAMPLE_SLICE, flowStatus, measuredThroughput, parseHistory, planning, scenarioOrderValid, timeBreakdown, total } from "@/lib/calculator";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { classificationWarnings, comparableHistory, conformance, coverage, dateValue, deliveryForecast, effectiveRisk, evidenceLevel, exampleCommitment, exampleHistory, EXAMPLE_COMMITMENT, EXAMPLE_EVIDENCE, EXAMPLE_FLOW, EXAMPLE_SCENARIOS, EXAMPLE_SLICE, flowStatus, measuredThroughput, monthAfter, nextPeriods, parseHistory, planning, scenarioOrderValid, timeBreakdown, total } from "@/lib/calculator";
 
-const history = parseHistory(EXAMPLE_CSV);
-const matching = comparableHistory(history, EXAMPLE_SLICE, "2026-07-01", false);
+const sample = exampleHistory(new Date(2026, 9, 17, 12));
+const history = parseHistory(sample.csv);
+const matching = comparableHistory(history, EXAMPLE_SLICE, sample.lastChange, false);
 const header = "slice,size,work_type,mode,context,started,accepted";
 
 describe("Measured slice evidence", () => {
@@ -28,7 +29,7 @@ describe("Measured slice evidence", () => {
   it.each(["size", "work_type", "mode", "context"] as const)("requires a match on %s", (key) => {
     const row = history.rows[1];
     if (!row) throw new Error("Example row missing");
-    expect(comparableHistory({ ...history, rows: [{ ...row, [key]: "different" }] }, EXAMPLE_SLICE, "2026-07-01", false).otherClass).toBe(1);
+    expect(comparableHistory({ ...history, rows: [{ ...row, [key]: "different" }] }, EXAMPLE_SLICE, sample.lastChange, false).otherClass).toBe(1);
   });
   it("matches leverage only when the column exists and the checkbox is enabled", () => {
     const input = parseHistory(`${header},ai_leverage\nA,M,integration,3,established,2026-07-01,2026-07-02,Low`);
@@ -47,7 +48,7 @@ describe("Judgment and recorded waits", () => {
   it("totals all four working-day components", () => expect(total({ active: 4, review: 2, decision: 1, external: 3 })).toBe(10));
   it("detects out-of-order scenario totals", () => expect(scenarioOrderValid({ ...EXAMPLE_SCENARIOS, Optimistic: { active: 100, review: 0, decision: 0, external: 0 } })).toBe(false));
   it("does not scale forecasts by AI leverage", () => {
-    const low = comparableHistory(history, { ...EXAMPLE_SLICE, leverage: "Low" }, "2026-07-01", false);
+    const low = comparableHistory(history, { ...EXAMPLE_SLICE, leverage: "Low" }, sample.lastChange, false);
     expect(deliveryForecast("F2", low.comparable, EXAMPLE_SCENARIOS)).toBe(deliveryForecast("F2", matching.comparable, EXAMPLE_SCENARIOS));
   });
   it("sums recorded wait hours as calendar days at F2", () => {
@@ -87,3 +88,61 @@ describe("Classification and verification", () => {
   it("warns for experiment mode", () => expect(classificationWarnings({ ...EXAMPLE_SLICE, mode: "E" })).toHaveLength(1));
   it("sets direct-mode coordination to five minutes", () => expect(planning["0"].time).toBe("5 minutes"));
 });
+
+describe("Dates follow the clock", () => {
+  afterEach(() => { vi.useRealTimers(); });
+  it("starts quarters at Q1 2027 on 17 October 2026", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 9, 17, 12));
+    expect(nextPeriods(new Date()).find((period) => period.startsWith("Q"))).toBe("Q1 2027");
+  });
+  it("rolls months and quarters into 2028 at the end of 2027", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2027, 11, 30, 12));
+    const periods = nextPeriods(new Date());
+    expect(periods[2]).toBe("January 2028");
+    expect(periods.filter((period) => period.startsWith("Q"))).toEqual(["Q1 2028", "Q2 2028", "Q3 2028"]);
+  });
+  it("handles 29 February without crashing", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2028, 1, 29, 12));
+    const periods = nextPeriods(new Date());
+    expect(periods[2]).toBe("March 2028");
+    expect(periods.filter((period) => period.startsWith("Q"))).toEqual(["Q2 2028", "Q3 2028", "Q4 2028"]);
+  });
+  it.each([new Date(2026, 9, 17, 12), new Date(2027, 11, 30, 12), new Date(2028, 1, 29, 12), new Date(2031, 0, 1, 12)])("keeps the example at n=9 and 7–16 days on %s", (today) => {
+    vi.useFakeTimers();
+    vi.setSystemTime(today);
+    const generated = exampleHistory(new Date());
+    const parsed = parseHistory(generated.csv);
+    const compared = comparableHistory(parsed, EXAMPLE_SLICE, generated.lastChange, false);
+    const cycles = compared.comparable.map((row) => row.cycle);
+    expect(compared.comparable).toHaveLength(9);
+    expect([Math.min(...cycles), Math.max(...cycles)]).toEqual([7, 16]);
+    expect(evidenceLevel(EXAMPLE_SLICE.acceptance, compared.comparable.length)).toBe("F2");
+    expect(deliveryForecast("F2", compared.comparable, EXAMPLE_SCENARIOS)).toBe("7–16 days");
+  });
+  it("sets the full authentication example", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 9, 17, 12));
+    const today = new Date();
+    const generated = exampleHistory(today);
+    const parsed = parseHistory(generated.csv);
+    const compared = comparableHistory(parsed, EXAMPLE_SLICE, generated.lastChange, false);
+    const level = evidenceLevel(EXAMPLE_SLICE.acceptance, compared.comparable.length);
+    const commitment = exampleCommitment(today);
+    expect(EXAMPLE_EVIDENCE).toEqual(["Automated tests pass", "Independent security review", "Works in staging"]);
+    expect(commitment.decider).toBe("Tech lead");
+    expect(commitment.when).toBe(monthAfter(today));
+    expect(commitment.when).toBe("November 2026");
+    expect(EXAMPLE_FLOW).toMatchObject({ waiting: 2, clears: 3, wip: 4, throughput: 2 });
+    expect(level).toBe("F2");
+    expect(conformance(commitment, level).text).toContain("Conformant");
+    expect(flowStatus(EXAMPLE_FLOW).text).toBe("Room to start.");
+    expect(externalReady(compared.comparable.length)).toContain("F2 (n=9)");
+  });
+});
+
+function externalReady(count: number) {
+  return `F2 (n=${count})`;
+}

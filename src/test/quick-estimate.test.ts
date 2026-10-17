@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EMPTY_QUICK, NO_OVERRIDES, QUICK_EXAMPLE, quickCopyLine, quickResult, quickScenarios, roundHalf, type RangeOverrides } from "@/lib/quick-estimate";
+import { addWorkingDays, EMPTY_QUICK, liveRange, NO_OVERRIDES, QUICK_EXAMPLE, quickCopyLine, quickResult, quickScenarios, roundHalf, type RangeOverrides } from "@/lib/quick-estimate";
 
 describe("Quick estimate", () => {
   it("is incomplete on an empty form", () => expect(quickResult(EMPTY_QUICK, NO_OVERRIDES).kind).toBe("incomplete"));
@@ -27,6 +27,11 @@ describe("Quick estimate", () => {
       Expected: { active: 1, review: 3.5, decision: 2, external: 0 },
       Conservative: { active: 1.5, review: 5, decision: 3, external: 0 },
     });
+  });
+  it("rounds the live window up to weekdays", () => {
+    expect(liveRange("2026-10-16", 3.5, 9.5)).toEqual({ from: "21 October 2026", to: "29 October 2026" });
+    const saturday = addWorkingDays(new Date(2026, 9, 17), 1);
+    expect(saturday.getDay()).toBe(1);
   });
   it("applies saved range overrides", () => {
     const overrides: RangeOverrides = { ...NO_OVERRIDES, risk: { High: { low: 3, high: 6 } } };

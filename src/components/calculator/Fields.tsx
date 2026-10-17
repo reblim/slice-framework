@@ -1,5 +1,5 @@
-import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
-import { ChevronDown, Info } from "lucide-react";
+import { Fragment, useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { Check, ChevronDown, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,7 +24,7 @@ export function Help({ label, id }: { label: string; id?: string }) {
   };
   return <Popover open={open} onOpenChange={setOpen}><span id={descriptionId} className="sr-only">{text}</span><span className="inline-flex" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}><PopoverTrigger asChild><Button type="button" variant="ghost" size="icon" className="calc-help" aria-label={`About ${label}`} aria-describedby={descriptionId} onFocus={() => setOpen(true)} onBlur={() => setOpen(false)} onKeyDown={closeOnEscape}><Info size={14} /></Button></PopoverTrigger></span><PopoverContent className="calc-help-bubble" onOpenAutoFocus={(event) => event.preventDefault()} onCloseAutoFocus={(event) => event.preventDefault()} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)} onKeyDown={closeOnEscape}>{text}</PopoverContent></Popover>;
 }
-export type RadioOption<T extends string> = { value: T; label: string; description?: string; meta?: string; span?: boolean };
+export type RadioOption<T extends string> = { value: T; label: string; description?: string; meta?: string; span?: boolean; group?: string };
 export function RadioGroup<T extends string>({ label, value, options, onChange, variant, className = "", describedBy, disabled = false }: { label: string; value: T | ""; options: readonly RadioOption<T>[]; onChange: (value: T) => void; variant: "cards" | "chips" | "rows"; className?: string; describedBy?: string; disabled?: boolean }) {
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
   const selected = options.findIndex((option) => option.value === value);
@@ -44,9 +44,11 @@ export function RadioGroup<T extends string>({ label, value, options, onChange, 
   };
   return <div role="radiogroup" aria-label={label} aria-describedby={describedBy} className={`calc-radios calc-radios-${variant} ${className}`} onKeyDown={onKeyDown}>{options.map((option, index) => {
     const checked = value === option.value;
-    return <button key={option.value} type="button" role="radio" aria-checked={checked} disabled={disabled} tabIndex={tabIndexFor(index)} ref={(element) => { refs.current[index] = element; }} className={`calc-radio ${option.span ? "span-full" : ""} ${checked ? "selected" : ""}`} onClick={() => onChange(option.value)}>
-      {variant === "cards" ? <><span className="calc-risk-label">{option.label}</span>{option.description ? <span className="calc-risk-desc">{option.description}</span> : null}{option.meta ? <span className="calc-days-pill">{option.meta}</span> : null}</> : variant === "rows" ? <><span className="calc-option-label">{option.label}</span>{option.meta ? <span className="calc-option-days">{option.meta}</span> : null}</> : option.label}
-    </button>;
+    const mark = checked ? <Check size={14} aria-hidden className="calc-check" /> : null;
+    const showGroup = Boolean(option.group && option.group !== options[index - 1]?.group);
+    return <Fragment key={option.value}>{showGroup ? <span className="calc-chip-label" role="presentation">{option.group}</span> : null}<button type="button" role="radio" aria-checked={checked} disabled={disabled} tabIndex={tabIndexFor(index)} ref={(element) => { refs.current[index] = element; }} className={`calc-radio ${option.span ? "span-full" : ""} ${checked ? "selected" : ""}`} onClick={() => onChange(option.value)}>
+      {variant === "cards" ? <><span className="calc-risk-label">{mark}{option.label}</span>{option.description ? <span className="calc-risk-desc">{option.description}</span> : null}{option.meta ? <span className="calc-days-pill">{option.meta}</span> : null}</> : variant === "rows" ? <><span className="calc-option-label">{mark}{option.label}</span>{option.meta ? <span className="calc-option-days">{option.meta}</span> : null}</> : <span className="inline-flex items-center gap-2">{mark}{option.label}</span>}
+    </button></Fragment>;
   })}</div>;
 }
 export function Label({ label, helpId }: { label: string; helpId?: string }) { return <span className="inline-flex items-center gap-1 text-sm font-medium text-foreground">{label}<Help label={label} id={helpId} /></span>; }
