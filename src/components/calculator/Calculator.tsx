@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowDown, BarChart3, Check, Copy, RotateCcw, FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CheckField, Choice, Help, Segmented, Step, Stepper, TextField } from "./Fields";
@@ -7,7 +7,7 @@ import { HistoryEditor } from "./HistoryEditor";
 import { QuickEstimate } from "./QuickEstimate";
 import { comparableHistory, conformance, evidenceLevel, externalLabel, EXAMPLE_COMMITMENT, EXAMPLE_CSV, EXAMPLE_EVIDENCE, EXAMPLE_FLOW, EXAMPLE_SLICE, flowStatus, measuredThroughput, parseHistory, sliceCard, total, type Commitment, type Flow, type Scenario, type Scenarios, type Slice } from "@/lib/calculator";
 import { EMPTY_COMMITMENT, EMPTY_FLOW, EMPTY_SCENARIOS, EMPTY_SLICE, historyCoversFourWeeks, historyCsv, importHistory, type HistoryDraft } from "@/lib/calculator-inputs";
-import { quickFeatureName, quickResult, quickScenarios, NO_OVERRIDES, type QuickAnswers } from "@/lib/quick-estimate";
+import { quickFeatureName, quickResult, quickScenarios, type QuickAnswers, type RangeOverrides } from "@/lib/quick-estimate";
 
 const modes = [
   { value: "0", label: "0 · Obvious and reversible" },
