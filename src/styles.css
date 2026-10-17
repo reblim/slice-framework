@@ -189,6 +189,7 @@ code,pre,kbd,.font-mono,.mono-label,.article-eyebrow,.status-badge,.alpha-badge 
 .calc-details summary { cursor:pointer; color:var(--foreground); font-weight:500; }
 .calc-full-result { margin-top:48px; scroll-margin-top:210px; }
 .calc-history { border-collapse:collapse; }
+.calc-step .overflow-x-auto { max-width:100%; contain:layout paint; }
 .calc-history th,.calc-history td { padding:8px; border-bottom:1px solid var(--border); text-align:left; vertical-align:top; }
 .calc-history th { white-space:nowrap; font-weight:500; }
 .calc-comparable { background:color-mix(in srgb,var(--link) 5%,var(--background)); }
