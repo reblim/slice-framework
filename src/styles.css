@@ -90,6 +90,15 @@
   --background: #030712; --foreground: #ffffff; --body: #9ca3af;
   --muted-foreground: #6b7280; --muted: rgba(255,255,255,.04);
   --border: rgba(255,255,255,.10); --link: #38bdf8;
+  --primary: var(--foreground); --primary-foreground: var(--background);
+  --secondary: var(--muted); --secondary-foreground: var(--foreground);
+  --accent: var(--muted); --accent-foreground: var(--foreground); --ring: var(--link);
+  --card: var(--background); --card-foreground: var(--foreground);
+  --popover: var(--background); --popover-foreground: var(--foreground); --input: var(--border);
+  --sidebar: var(--background); --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--link); --sidebar-primary-foreground: var(--background);
+  --sidebar-accent: var(--muted); --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border); --sidebar-ring: var(--link);
   --code-panel: var(--muted); --code-text: var(--body); --code-muted: var(--muted-foreground);
   --warning: oklch(.8 .14 80); --success: oklch(.76 .14 155); --destructive: oklch(.704 .191 22.216);
 }
@@ -177,6 +186,9 @@ code,pre,kbd,.font-mono,.mono-label,.article-eyebrow,.status-badge,.alpha-badge 
 .calc-danger { color:var(--destructive); }.calc-warning,.calc-warning-text { color:var(--warning); }.calc-success { color:var(--success); }
 .calc-segment-0 { color:var(--primary); }.calc-segment-1 { color:var(--chart-2); }.calc-segment-2 { color:var(--warning); }.calc-segment-3 { color:var(--muted-foreground); }
 .docs-content > main.calculator-page { max-width:760px; margin:0 auto; }
+.calculator-page button,.calculator-page input,.calculator-page textarea { color:var(--foreground); }
+.calculator-page .calc-help { color:var(--muted-foreground); }
+.calculator-page .calc-estimate-option.selected { color:var(--link); }
 .calc-step { border:1px solid var(--border); border-radius:8px; padding:24px; }
 .calc-help { width:22px !important; height:22px !important; padding:0 !important; color:var(--muted-foreground); border-radius:50%; flex-shrink:0; }
 .calc-help:hover { color:var(--link); }
