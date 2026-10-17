@@ -1,10 +1,29 @@
-# SLICE public alpha: start here
+# Start here
 
-**SLICE (working name) is an experimental framework that helps small, AI-assisted teams decide what deserves building, how much, by when, and whether it worked.** It is in public alpha: open for testing, criticism and refinement, and not a proven framework or a replacement for Scrum.
+**SLICE is an open framework for planning, estimating and shipping software when AI writes the code.** It is built for teams of 1 to 25 and is in public alpha: open for testing and criticism, and not yet proven.
 
-## The problem
+## What changed
 
-When implementation stops being the slowest step, delivery is limited by deciding and proving. Most teams still spend their planning effort on coordination, and too little on decisions and verification.
+AI tools can now build a feature in hours or days that used to take weeks. But the rest of the work did not speed up: reviewing the code, testing it, deciding what exactly to build, and waiting on people outside the team. Often it grew, because there is more code to check.
+
+Take an authentication module:
+
+| | Before AI tools | With AI tools |
+| --- | --- | --- |
+| Building | About 2 weeks | 1–2 days |
+| Review and security testing | 2–4 days | 2–5 days |
+| Open decisions | 1–3 days | 1–3 days |
+| Waiting on others | 0–5 days | 0–5 days |
+| **Until it is live** | **About 3–4 weeks** | **About 1–3 weeks** |
+
+"Done in a day" is true for the code and wrong for the feature. Most planning methods still estimate the building and treat the rest as noise. SLICE plans and estimates all of it.
+
+## What SLICE gives you
+
+- **Planning in proportion to risk.** An obvious change gets a one-line note; anything touching money, logins or personal data gets a reviewed design. Five planning modes tell you which is which.
+- **Honest estimates.** Build time with AI, plus review, decisions and waiting, labelled with how much evidence is behind them. Never "old estimate × AI factor".
+- **A protected bottleneck.** Find where work waits longest, usually review, and stop starting new work while it is full.
+- **Proof that it worked.** Uncertain work is a Bet with a criterion you can count, checked on a date you set in advance.
 
 ## Five principles
 
@@ -16,21 +35,16 @@ When implementation stops being the slowest step, delivery is limited by decidin
 | Constraint-aware | Find where work waits longest and limit work there. |
 | Evidence-driven | Every forecast and claim says what evidence it rests on. |
 
-## What alpha teams do
+## Use it
 
-- Eight weeks, teams of 1–25, free and voluntary.
-- Start with the 20-minute [Quick Start](/alpha/quick-start) on real work.
-- Keep three records: Roadmap item, Slice card, Evidence record ([templates](/alpha/templates)).
-- A 20-minute weekly check and a 5-question weekly form.
-- An exit survey and a 30-minute interview; the alpha report is shared with every team.
-
-## Kit contents
-
-| Asset | What it is |
+| If you want to | Go to |
 | --- | --- |
-| [Quick Start](/alpha/quick-start) | One initiative, three slices, 20 minutes |
-| [Templates](/alpha/templates) | The three records as Markdown with YAML front matter |
-| [Pilot protocol](/alpha/pilot-protocol) | Cohort, timeline, measures, weekly form, data handling |
-| [Reference specification](/spec/0.3.1) | v0.3.1, the full framework |
+| Try SLICE on real work in 20 minutes | [Quick Start](/alpha/quick-start) |
+| Estimate one feature in a minute | [Calculator](/calculator) |
+| Copy the three records SLICE uses | [Templates](/alpha/templates) |
+| Read every rule | [Specification](/spec) |
+| Join the eight-week pilot | [Pilot protocol](/alpha/pilot-protocol) |
 
-SLICE is developed by Milber Ferreira, with research and drafting help from OpenAI's and Anthropic's models.
+## About
+
+SLICE is open source: the specification is licensed under CC BY 4.0 and the website code under MIT. It is developed by Milber Ferreira, with research and drafting help from OpenAI's and Anthropic's models. Feedback and pilot reports go to [GitHub](https://github.com/reblim/slice-framework/issues).

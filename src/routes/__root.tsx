@@ -10,7 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
-import { SITE_NAME, TAGLINE } from "../config";
+import { SITE_NAME, DESCRIPTION } from "../config";
 import { DocumentationShell } from "../components/DocumentationShell";
 import { PageNotFound } from "../components/PageStatus";
 import appCss from "../styles.css?url";
@@ -66,7 +66,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: SITE_NAME },
-      { name: "description", content: TAGLINE },
+      { name: "description", content: DESCRIPTION },
     ],
     links: [
       {

@@ -1,19 +1,43 @@
 # Changelog
 
-**Current version: [v0.3.1](/spec/0.3.1), the public-alpha release of v0.3.** All versions are Milber Ferreira's, developed with OpenAI's and Anthropic's models. "SLICE" is a working name pending a public-name decision.
+**Current version: [v0.3.2](/spec/0.3.2), the first public release of the alpha.** All versions are Milber Ferreira's, developed with OpenAI's and Anthropic's models.
 
 ## Versions
 
 | Version | Status | Author | AI assistance | What it is |
 | --- | --- | --- | --- | --- |
-| [v0.3.1](/spec/0.3.1) | Current: public alpha | Milber | Alpha review with OpenAI's models; Anthropic's models fact-checked it and redrafted | Patch: alpha status, SliceOps correction, exploratory thresholds |
+| [v0.3.2](/spec/0.3.2) | Current: public alpha | Milber | Copy and consistency review with Anthropic's models | Patch: public name, AI-first positioning, self-contained definitions, quick estimate |
+| [v0.3.1](/spec/0.3.1) | Archived | Milber | Alpha review with OpenAI's models; Anthropic's models fact-checked it and redrafted | Patch: alpha status, SliceOps correction, exploratory thresholds |
 | [v0.3](/spec/0.3) | Archived | Milber | External review with OpenAI's models; Anthropic's models fact-checked it and redrafted | Pilot-ready working specification |
 | [v0.2](/spec/0.2) | Archived | Milber | Anthropic's models corroborated the research and redrafted | First research-backed revision |
 | [v0.1](/spec/0.1) | Archived | Milber | OpenAI's models | Founding specification |
 
-**Lineage:** initial research → v0.1 → research review (section 0 of v0.2) → v0.2 → external review and assessment → v0.3 → alpha readiness review, SliceOps verification and naming assessment → v0.3.1.
+**Lineage:** initial research → v0.1 → research review (section 0 of v0.2) → v0.2 → external review and assessment → v0.3 → alpha readiness review, SliceOps verification and naming assessment → v0.3.1 → name decision and pre-release copy review → v0.3.2.
 
 Newest first. Each entry lists what was added, changed, removed and fixed.
+
+## v0.3.2 (Public Alpha) — 17 October 2026
+
+Patch release: no rule changes. First version published in the public repository.
+
+**Added**
+
+- What AI changes, and what it doesn't: a worked authentication example (section 1.2).
+- Quick estimate: a one-minute F1 estimate from the four parts of the forecast formula, with starting suggestions per risk tier (section 8.8, informative), and a quick-estimate view in the calculator.
+- Definitions of the hierarchy, horizons, sizes, AI leverage and risk, previously only in v0.1 (sections 5.0 and 8.0).
+- How to join the pilot, and a plain data-handling notice in the pilot protocol.
+
+**Changed**
+
+- The public name is SLICE; "working name" is removed everywhere (decision D30).
+- The homepage, README and spec opening say directly that SLICE is for planning and estimating software when AI writes the code (D31).
+- The workflow in section 10 is written out in text.
+- The pilot size in section 14 now matches the pilot protocol: 5–10 teams.
+- Version history moved out of the spec's opening and into this changelog.
+
+**Fixed**
+
+- Leftovers from the original drafting tool in the archived specs: an "@" before the author's name, references to tabs that don't exist on this site, and placeholders where diagrams were.
 
 ## v0.3.1 (Public Alpha) — 16 October 2026
 

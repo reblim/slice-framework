@@ -46,6 +46,6 @@ export function DocumentationShell({ children }: { children: ReactNode }) {
     <aside className="docs-left"><Sidebar close={() => setOpen(false)} /></aside>
     <div className="docs-content">{children}</div>
     {!wide && <aside className="docs-right">{toc.length > 0 && <nav aria-label="On this page"><p className="mono-label">On this page</p><ul>{toc.map((item) => <li key={item.id} className={item.depth === 3 ? "toc-nested" : ""}><a href={`#${item.id}`} className={active === item.id ? "active" : ""}>{item.text}</a></li>)}</ul></nav>}</aside>}
-  </div><footer className="site-footer"><span>{SITE_NAME} (working name) · Public alpha · Milber Ferreira, 2026</span><Link to="/changelog">Changelog</Link></footer>
+  </div><footer className="site-footer"><span>{SITE_NAME} · Public alpha · Milber Ferreira, 2026</span><Link to="/changelog">Changelog</Link></footer>
   <Sheet open={open} onOpenChange={setOpen}><SheetContent side="left" className="docs-drawer"><SheetTitle className="px-6 pt-6 text-sm">{SITE_NAME} documentation</SheetTitle><Sidebar close={() => setOpen(false)} /></SheetContent></Sheet></>;
 }

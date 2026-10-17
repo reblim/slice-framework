@@ -2,6 +2,8 @@
 
 **5–10 teams, eight weeks, six exploratory hypotheses, and a public report that includes the failures.** Free and voluntary; teams can leave at any time.
 
+**To join,** email slice@milberferreira.com with your team size, what you are building and which AI tools you use. You get a reply within a week.
+
 ## Cohort
 
 | Segment | Target | Why |
@@ -14,7 +16,7 @@
 
 | Week | What happens |
 | --- | --- |
-| −1 | Recruit and sign the participation note |
+| −1 | Confirm participation by email and agree on start date |
 | 0 | 30-minute onboarding; Quick Start on real work; collect 2–4 weeks of previous delivery data if it exists |
 | 1–8 | Run SLICE; 20-minute weekly flow check; 5-question weekly form |
 | 9 | Exit survey and 30-minute interview |
@@ -22,7 +24,7 @@
 
 ## What is measured
 
-The six mandatory metrics from the [spec](/spec/0.3.1) (accepted throughput, cycle time, decision latency, wait at the constraint, outcome resolution, calibration), plus overhead: minutes and fields per Mode 1 slice card. Wherever possible these come from issue-tracker and Git timestamps, never from timesheets. F3 forecasting is off.
+The six mandatory metrics from the [spec](/spec) (accepted throughput, cycle time, decision latency, wait at the constraint, outcome resolution, calibration), plus overhead: minutes and fields per Mode 1 slice card. Wherever possible these come from issue-tracker and Git timestamps, never from timesheets. F3 forecasting is off.
 
 ## Weekly form (5 questions, under 5 minutes)
 
@@ -36,10 +38,9 @@ The six mandatory metrics from the [spec](/spec/0.3.1) (accepted throughput, cyc
 
 H1–H6 from the spec, all exploratory: with 5–10 teams and no control group, results show direction, not cause.
 
-## Data handling (draft, to be checked before launch)
+## How your data is handled
 
-- Collected: the metrics above, form answers and interview notes. Never source code, customer data or credentials.
-- Teams are pseudonymous in all analysis; nothing identifying is published without written consent.
-- Data is stored with EU-hosted tools where possible, kept until the alpha report plus six months, and deleted earlier on request.
-- Participation rests on consent, which can be withdrawn at any time.
-- Have a privacy professional review this note before the first team signs; it is a draft, not legal advice.
+- **What we collect:** the metrics above, weekly form answers and interview notes. Never source code, customer data or credentials.
+- **Who sees it:** only Milber Ferreira, who runs the pilot. Teams are pseudonymous in all analysis, and nothing that identifies a team or a person is published without written consent.
+- **Where it is kept:** in EU-hosted tools where possible, until six months after the alpha report is published. Then it is deleted.
+- **Your choice:** participation is voluntary and based on your consent. You can stop at any time and ask for your data to be deleted: email slice@milberferreira.com.

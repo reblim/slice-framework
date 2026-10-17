@@ -4,7 +4,7 @@
 
 | # | Decision | Introduced | Status | Notes |
 | --- | --- | --- | --- | --- |
-| D1 | SLICE as the working name; public name decided before going public | v0.1 | Active | Narrowed by D28 |
+| D1 | SLICE as the working name; public name decided before going public | v0.1 | Superseded | By D30 |
 | D2 | Five-level hierarchy: Outcome → Initiative → Feature → Slice → Agent work | v0.1 | Active | |
 | D3 | Now / Next / Later, with a team-defined commitment boundary | v0.1 | Active | |
 | D4 | XS–XL sizes with no fixed hour equivalents | v0.1 | Active | |
@@ -30,17 +30,18 @@
 | D24 | Treat "SliceOps" as unverified and exclude it | v0.3 | Superseded | By D25: SliceOps verified at sliceops.org |
 | D25 | Position SLICE on investment, forecasting and outcomes, distinct from SliceOps' execution audit | v0.3.1 | Active | |
 | D26 | Release alpha corrections as patch v0.3.1; reserve v0.4 for alpha learnings | v0.3.1 | Active | No rule changed |
-| D27 | Start the alpha with invited teams now; go public after name clearance | v0.3.1 | Active | Proposed by Anthropic's models; Milber to confirm |
-| D28 | Public name not yet decided; SLICE remains the working name | v0.3.1 | Active | Anthropic's models recommend a new name (Pensum); the decision is Milber's |
+| D27 | Start the alpha with invited teams; go public once the name is decided | v0.3.1 | Superseded | By D30: the name is decided and the repository is public |
+| D28 | Public name not yet decided; SLICE remains the working name | v0.3.1 | Superseded | By D30. A new name (Pensum) was recommended in the naming assessment and not chosen |
 | D29 | Pilot thresholds are exploratory; F3 is unavailable during the alpha | v0.3.1 | Active | |
+| D30 | The public name is SLICE; no trademark claim to the word; not affiliated with SliceOps | v0.3.2 | Active | Chosen by Milber over the alternatives in the naming research |
+| D31 | Lead all public copy with what SLICE is for: planning and estimating software when AI writes the code. Keep "AI" out of the name | v0.3.2 | Active | The name should outlast the label; the message should not hide the reason SLICE exists |
+| D32 | Quick estimate as the default way to start: four judgment ranges summed into an F1 range. Default ranges are starting suggestions, not data | v0.3.2 | Active | The full forecast stays for teams with measured history |
 
-## Open questions for the next version
+## Open questions the alpha should answer
 
-- [ ] Choose the public name: Pensum is the front-runner, pending EUIPO, USPTO, GitHub, npm and domain checks.
-- [ ] Privacy review of the pilot data-handling note.
-- [ ] Confirm licences (CC BY 4.0 for the spec, MIT for templates and code).
-- [ ] Statistical acceptance criteria for each F3 forecast model.
-- [ ] Whether SLICE measurably beats a team's previous process (pilot hypotheses H1–H6).
-- [ ] Whether decision latency and coordination minutes can be captured from timestamps alone.
-- [ ] Confirmation of the Faros +14.5% incidents-per-PR figure.
-- [x] A source for "SliceOps": found at sliceops.org; v0.3 was wrong.
+These are the questions only real teams can answer. Results go into the alpha report and v0.4. To contribute evidence, [open a pilot report or specification feedback issue](https://github.com/reblim/slice-framework/issues/new/choose).
+
+1. **Does SLICE beat a team's previous way of working?** Pilot hypotheses H1–H6 test decision latency, coordination time, calibration, outcome reviews, the work-in-progress rule and overhead.
+2. **Are the quick-estimate starting ranges realistic?** How much review, decision and waiting time do slices at each risk tier actually take?
+3. **Can decision latency and coordination time be measured from timestamps alone,** without anyone logging time by hand?
+4. **What should calibrate F3?** Which statistical test must a probabilistic forecast pass before teams may report P50 and P85?

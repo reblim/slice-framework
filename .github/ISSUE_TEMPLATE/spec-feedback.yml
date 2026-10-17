@@ -8,7 +8,8 @@ body:
     attributes:
       label: Version
       options:
-        - v0.3.1 (current)
+        - v0.3.2 (current)
+        - v0.3.1
         - v0.3
         - v0.2
         - v0.1

@@ -16,6 +16,7 @@ describe("App routing", () => {
   });
 
   it.each([
+    ["/spec/0.3.2", "/spec/$version"],
     ["/spec/0.3.1", "/spec/$version"],
     ["/calculator", "/calculator"],
     ["/alpha/start-here", "/alpha/$page"],

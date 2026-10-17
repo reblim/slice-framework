@@ -2,7 +2,7 @@
 
 16 October 2026
 
-> **By Anthropic's models, as input to Milber Ferreira.** A response to the [alpha readiness review](/research/04-alpha-readiness-review) and the [naming research](/research/05-naming-research). The naming decision is Milber's and still open.
+> **By Anthropic's models, as input to Milber Ferreira.** A response to the [alpha readiness review](/research/04-alpha-readiness-review) and the [naming research](/research/05-naming-research). **Outcome:** Milber kept SLICE as the public name (decision D30, 17 October 2026).
 
 **Release v0.3.1 now, and choose and clear the public name before the repository goes public.** Alpha testing with invited teams can start under the working name.
 

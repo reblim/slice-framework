@@ -1,6 +1,6 @@
 # SLICE Framework — Authorship
 
-SLICE (working name) was conceived and is developed by Milber Ferreira, 2026.
+SLICE was conceived and is developed by Milber Ferreira, 2026.
 Research and drafting were assisted by OpenAI's and Anthropic's models;
 all decisions, structure and final text are Milber Ferreira's.
 

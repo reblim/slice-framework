@@ -1,14 +1,16 @@
-# SLICE (working name)
+# SLICE
 
-**Decide deliberately. Build small. Count only what is proven.**
+**Plan and estimate software when AI writes the code.**
 
-SLICE is an experimental product roadmapping, forecasting and delivery framework for small, AI-assisted teams of 1–25 people. It helps a team decide what deserves building, how much planning each piece of work deserves, when it is likely to land, and whether it worked.
+AI made building fast. Reviewing, testing and deciding didn't speed up. SLICE is an open framework for planning, estimating and shipping software with AI, for teams of 1 to 25. It helps a team decide what deserves building, how much planning each piece deserves, when it will really be live, and whether it worked.
 
-> **Status: public alpha (v0.3.1).** Open for testing, criticism and refinement. SLICE is not a proven framework, an industry standard or a successor to Scrum. "SLICE" is a working name, and the project is unrelated to SliceOps.
+> **Status: public alpha (v0.3.2).** Open for testing, criticism and refinement. SLICE is not a proven framework, an industry standard or a successor to Scrum. It is not affiliated with SliceOps.
 
 ## Why SLICE exists
 
-When implementation stops being the slowest step, delivery is limited by deciding and proving. Most teams still spend their planning effort on coordination, and too little on decisions and verification. SLICE finds the team's current limit and manages work to it.
+AI tools can now build in a day what used to take two weeks. The rest of the work did not speed up: reviewing and testing the code, deciding what exactly to build, and waiting on people outside the team. An authentication module that once took 3–4 weeks now takes 1–3 weeks, not one day.
+
+When implementation stops being the slowest step, delivery is limited by deciding and proving. SLICE estimates all of it, finds where work waits longest, and manages work to that limit. It never multiplies an old estimate by an "AI factor".
 
 ## The five principles
 
@@ -24,7 +26,7 @@ When implementation stops being the slowest step, delivery is limited by decidin
 
 - **Roadmapping:** Outcome → Initiative → Feature → Slice, with Now / Next / Later horizons and three item types: Bet, Obligation and Improvement.
 - **Proportionate Planning:** five planning modes (0, 1, E, 2, 3), each with its own coordination time box, so planning effort matches risk.
-- **Forecasting:** relative sizes (XS–XL) with no hour equivalents, reference classes, and evidence levels F0–F3. Ranges always carry their sample count, and AI leverage is never used as a multiplier.
+- **Forecasting:** a one-minute quick estimate (AI build time plus review, decisions and waiting), relative sizes (XS–XL) with no hour equivalents, reference classes, and evidence levels F0–F3. Ranges always carry their sample count, and AI leverage is never used as a multiplier.
 - **Flow:** work-in-progress limits at the constraint, and verification tiers set by risk.
 - **Three records:** Roadmap item, Slice card and Evidence record.
 
@@ -33,13 +35,14 @@ When implementation stops being the slowest step, delivery is limited by decidin
 | If you want to | Read |
 | --- | --- |
 | Understand SLICE in five minutes | [Start here](src/content/alpha/start-here.md) |
+| Estimate one feature in a minute | [Quick estimate, specification section 8.8](src/content/spec/0.3.2.md) |
 | Try it on real work in 20 minutes | [Quick Start](src/content/alpha/quick-start.md) |
 | Copy the three records | [Templates](src/content/alpha/templates.md) |
-| Read the full specification | [Specification v0.3.1](src/content/spec/0.3.1.md) |
+| Read the full specification | [Specification v0.3.2](src/content/spec/0.3.2.md) |
 | Join or run a pilot | [Pilot protocol](src/content/alpha/pilot-protocol.md) |
 | See how SLICE evolved | [Changelog](src/content/changelog.md) · [Decisions](src/content/decisions.md) · [Research](src/content/research/) |
 
-Earlier versions of the specification ([v0.3](src/content/spec/0.3.md), [v0.2](src/content/spec/0.2.md), [v0.1](src/content/spec/0.1.md)) are kept unchanged so the evolution stays visible.
+Earlier versions of the specification ([v0.3.1](src/content/spec/0.3.1.md), [v0.3](src/content/spec/0.3.md), [v0.2](src/content/spec/0.2.md), [v0.1](src/content/spec/0.1.md)) are kept unchanged so the evolution stays visible.
 
 ## Repository layout
 
