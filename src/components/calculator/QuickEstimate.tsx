@@ -28,38 +28,41 @@ export function QuickEstimate({ onContinue }: { onContinue: (answers: QuickAnswe
   const copy = async () => { if (result.kind !== "ready") return; try { await navigator.clipboard.writeText(quickCopyLine(answers, result)); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { /* clipboard unavailable */ } };
   const buildHelp = useId();
   const guidance = FEATURE_GUIDANCE[answers.feature];
-  const featureOptions = [...FEATURE_GROUPS.flatMap((group) => group.features.map((feature) => ({ value: feature.key, label: feature.label, group: group.label }))), { value: "other" as const, label: "Something else", span: true }];
+  const featureOptions = [...FEATURE_GROUPS.flatMap((group) => group.features.map((feature, index) => ({ value: feature.key, label: feature.label, group: group.label, span: group.features.length % 2 === 1 && index === group.features.length - 1 }))), { value: "other" as const, label: "Something else", span: true }];
   const live = result.kind === "ready" ? liveRange(startDate, result.low, result.high) : null;
+  const headline = result.kind === "ready" ? `${result.low === result.high ? formatNumber(result.low) : `${formatNumber(result.low)}–${formatNumber(result.high)}`} working days until it's live` : "";
   return <div className="calc-quick">
-    <p className="text-base leading-7 text-muted-foreground">AI makes building fast. Reviewing, deciding and waiting still take time. This adds it all up.</p>
-    <div className="my-6 flex flex-wrap gap-3"><Button variant="outline" onClick={() => setAnswers(QUICK_EXAMPLE)}><FlaskConical size={16} />Try example: authentication</Button><Button variant="ghost" onClick={() => { setAnswers(EMPTY_QUICK); setStartDate(calendarISO(new Date())); }}><RotateCcw size={16} />Reset</Button></div>
+    <div className="calc-actions"><Button variant="outline" onClick={() => setAnswers(QUICK_EXAMPLE)}><FlaskConical size={16} />Try example: authentication</Button><Button variant="ghost" onClick={() => { setAnswers(EMPTY_QUICK); setStartDate(calendarISO(new Date())); }}><RotateCcw size={16} />Reset</Button></div>
 
-    <section className="calc-step"><h2 className="text-base font-semibold">1. What are you building?</h2><div className="mt-4 space-y-3">
+    <section className="calc-step"><h2 className="calc-question">1. What are you building?</h2><div className="calc-step-body">
       <RadioGroup label="Feature" variant="chips" value={answers.feature} options={featureOptions} onChange={(value) => update("feature", value)} />
-      {answers.feature === "other" && <Input aria-label="Feature name" placeholder="e.g. Team roles and permissions" value={answers.featureText} onChange={(event) => update("featureText", event.target.value)} />}
-      {guidance?.note && <p className="text-sm text-muted-foreground">{guidance.note}</p>}
+      {answers.feature === "other" && <div className="calc-other"><label htmlFor="quick-feature-text">What are you building?</label><Input id="quick-feature-text" aria-label="What are you building?" placeholder="e.g. Team roles and permissions" value={answers.featureText} onChange={(event) => update("featureText", event.target.value)} /></div>}
+      {guidance?.note && <p className="calc-help-line">{guidance.note}</p>}
     </div></section>
 
-    <section className="calc-step"><h2 className="flex items-center gap-1 text-base font-semibold">2. How long does building take with AI?<Help label="Build time with AI" id={buildHelp} /></h2><div className="mt-4">
+    <section className="calc-step"><h2 className="calc-question">2. How long does building take with AI?<Help label="Build time with AI" id={buildHelp} /></h2><div className="calc-step-body">
       <RadioGroup label="Build time with AI" describedBy={buildHelp} variant="rows" value={answers.build} options={BUILD_OPTIONS.map((option) => ({ value: option.key, label: option.label, meta: rangeText(option.range) }))} onChange={(value) => update("build", value)} />
-      <p className="mt-3 text-sm text-muted-foreground">Building in old or fragile code? AI helps less there, so pick a longer option.</p>
-      {answers.build === "bigger" && <p role="status" className="mt-3 text-sm calc-warning-text">That's too big for one estimate. Split it into smaller pieces first.</p>}
+      <p className="calc-help-line">Building in old or fragile code? AI helps less there, so pick a longer option.</p>
+      {answers.build === "bigger" && <p role="status" className="calc-help-line calc-warning-text">That's too big for one estimate. Split it into smaller pieces first.</p>}
     </div></section>
 
-    <section className="calc-step"><h2 className="text-base font-semibold">3. How risky is it?</h2><div className="mt-4">
+    <section className="calc-step"><h2 className="calc-question">3. How risky is it?</h2><div className="calc-step-body">
       <RadioGroup label="Risk" variant="cards" value={answers.risk} options={RISK_OPTIONS.map((option) => ({ value: option.key, label: option.label, description: option.description, meta: rangeText(option.range) }))} onChange={(value) => update("risk", value)} />
-    </div>{answers.risk === "High" && !guidance?.note && <p className="mt-3 text-sm text-muted-foreground">{RISK_OPTIONS[2]?.note}</p>}</section>
-
-    <section className="calc-step"><h2 className="text-base font-semibold">4. What still needs deciding or designing?</h2><div className="mt-4">
-      <RadioGroup label="Decisions and design" variant="rows" value={answers.decision} options={DECISION_OPTIONS.map((option) => ({ value: option.key, label: option.label, meta: option.range ? rangeText(option.range) : "Decide first" }))} onChange={(value) => update("decision", value)} />
-      {answers.decision === "big" && <p role="status" className="mt-3 text-sm calc-warning-text">Decide first, or run a Mode E experiment. Then estimate.</p>}
+      {answers.risk === "High" && !guidance?.note && <p className="calc-help-line">{RISK_OPTIONS[2]?.note}</p>}
     </div></section>
 
-    <section className="calc-step"><h2 className="text-base font-semibold">5. Waiting on anyone outside the team?</h2><div className="mt-4">
-      <RadioGroup label="Waiting" variant="rows" value={answers.external} options={EXTERNAL_OPTIONS.map((option) => ({ value: option.key, label: option.label, meta: rangeText(option.range) }))} onChange={(value) => update("external", value)} />
-      <p className="mt-3 text-sm text-muted-foreground">For example a vendor, another team, a customer, app store review, a security review or legal approval.</p>
-    </div>
-    <div className="mt-4 max-w-xs space-y-2"><label className="text-sm font-medium text-foreground" htmlFor="quick-start-date">Start date</label><input id="quick-start-date" type="date" className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm" value={startDate} onChange={(event) => setStartDate(event.target.value)} /></div></section>
+    <section className="calc-step"><h2 className="calc-question">4. What still needs deciding or designing?</h2><div className="calc-step-body">
+      <RadioGroup label="Decisions and design" variant="rows" value={answers.decision} options={DECISION_OPTIONS.map((option) => ({ value: option.key, label: option.label, meta: option.range ? rangeText(option.range) : "Decide first" }))} onChange={(value) => update("decision", value)} />
+      {answers.decision === "big" && <p role="status" className="calc-help-line calc-warning-text">Decide first, or run a Mode E experiment. Then estimate.</p>}
+    </div></section>
+
+    <section className="calc-step"><h2 className="calc-question">5. Waiting on anyone outside the team?</h2><div className="calc-step-body">
+      <div>
+        <RadioGroup label="Waiting" variant="rows" value={answers.external} options={EXTERNAL_OPTIONS.map((option) => ({ value: option.key, label: option.label, meta: rangeText(option.range) }))} onChange={(value) => update("external", value)} />
+        <p className="calc-help-line">For example a vendor, another team, a customer, app store review, a security review or legal approval.</p>
+      </div>
+      <div className="calc-start"><label htmlFor="quick-start-date">Start date</label><input id="quick-start-date" type="date" className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm" value={startDate} onChange={(event) => setStartDate(event.target.value)} /></div>
+    </div></section>
 
     <details className="calc-details"><summary>Adjust the suggested days</summary><p className="mt-2 text-xs text-muted-foreground">Starting suggestions. Change them to fit your team.</p><div className="mt-4 space-y-3">
       {BUILD_OPTIONS.filter((option) => option.range).map((option) => <div key={option.key} className="flex items-center justify-between gap-3 text-sm"><span>{option.label}</span><span className="flex items-center gap-2"><Stepper label={`${option.label} low`} step={0.25} value={overrides.build[option.key as "day"]?.low ?? option.range!.low} onChange={(value) => setRange("build", option.key, { low: value, high: overrides.build[option.key as "day"]?.high ?? option.range!.high })} /><Stepper label={`${option.label} high`} step={0.25} value={overrides.build[option.key as "day"]?.high ?? option.range!.high} onChange={(value) => setRange("build", option.key, { low: overrides.build[option.key as "day"]?.low ?? option.range!.low, high: value })} /></span></div>)}
@@ -70,19 +73,25 @@ export function QuickEstimate({ onContinue }: { onContinue: (answers: QuickAnswe
 
     <section className="calc-full-result" aria-live="polite">
       {result.kind === "incomplete" && <p className="text-sm text-muted-foreground">Answer the questions above to see your estimate.</p>}
-      {result.kind === "undecided" && <p className="text-lg">Not estimated yet · F0</p>}
-      {result.kind === "ready" && <>
-        <p className="text-3xl font-semibold tabular-nums" data-testid="quick-result">{result.low}–{result.high} working days until it's live</p>
-        {live && <p className="mt-2 text-sm" data-testid="quick-live">Likely live between {live.from} and {live.to}</p>}
-        {live && <p className="mt-1 text-xs text-muted-foreground">Weekends skipped; public holidays and part-time work not included.</p>}
-        <div className="calc-breakdown mt-4" aria-label="Time breakdown">{result.parts.map((part, index) => { const mid = (part.range.low + part.range.high) / 2; return mid > 0 ? <span key={part.label} className={`calc-segment-${index}`} style={{ flexGrow: mid }} title={`${part.label}: ${formatNumber(part.range.low)}–${formatNumber(part.range.high)} days`} /> : null; })}</div>
-        <ul className="mt-2 space-y-1 text-xs">{result.parts.map((part, index) => <li key={part.label} className="flex items-center justify-between gap-3"><span className="flex gap-2"><span className={`calc-segment-${index} mt-1 size-2 shrink-0 bg-current`} />{part.label}</span><span className="tabular-nums">{formatNumber(part.range.low)}–{formatNumber(part.range.high)} days</span></li>)}</ul>
-        <p className="mt-4 text-sm text-muted-foreground">These are days of work and waiting for one slice. If the team juggles several things at once, the calendar time is longer. The full forecast's flow check shows that.</p>
-        <p className="mt-4 text-sm">Building is {result.buildPercent}% of the time. The rest is proving it works and deciding.</p>
-        <div className="mt-4 flex flex-wrap items-center gap-3"><code className="min-w-0 flex-1 break-words rounded border border-border bg-muted px-3 py-2 text-xs" data-testid="quick-copy-line">{quickCopyLine(answers, result)}</code><Button variant="outline" size="icon" title="Copy estimate line" aria-label="Copy estimate line" onClick={copy}>{copied ? <Check size={16} /> : <Copy size={16} />}</Button></div>
-        <p className="mt-3 text-xs text-muted-foreground">F1 is a judgment estimate. After 7 similar finished pieces of work, use the Full SLICE forecast for a measured range.</p>
-        <Button className="mt-4" onClick={() => onContinue(answers, overrides)}>Continue in Full SLICE forecast<ArrowRight size={16} /></Button>
-      </>}
+      {result.kind === "undecided" && <p className="calc-result-headline">Not estimated yet · F0</p>}
+      {result.kind === "ready" && <div className="calc-result-stack">
+        <div>
+          <p className="calc-result-headline tabular-nums" data-testid="quick-result">{headline}</p>
+          {live && <p className="calc-live" data-testid="quick-live">Likely live between {live.from} and {live.to}</p>}
+          {live && <p className="calc-help-line">Weekends skipped; public holidays and part-time work not included.</p>}
+        </div>
+        <div>
+          <div className="calc-breakdown" aria-label="Time breakdown">{result.parts.map((part, index) => { const mid = (part.range.low + part.range.high) / 2; return mid > 0 ? <span key={part.label} className={`calc-segment-${index}`} style={{ flexGrow: mid }} title={`${part.label}: ${rangeText(part.range)}`} /> : null; })}</div>
+          <ul className="calc-legend">{result.parts.map((part, index) => <li key={part.label}><span className="calc-legend-name"><span className={`calc-segment-${index} size-2 shrink-0 bg-current`} />{part.label}</span><span className="days">{rangeText(part.range)}</span></li>)}</ul>
+        </div>
+        <div className="calc-result-notes">
+          <p>These are days of work and waiting for one slice. If the team juggles several things at once, the calendar time is longer. The full forecast's flow check shows that.</p>
+          <p>Building is {result.buildPercent}% of the time. The rest is proving it works and deciding.</p>
+        </div>
+        <div className="calc-copybox"><code data-testid="quick-copy-line">{quickCopyLine(answers, result)}</code><Button variant="outline" size="icon" title="Copy estimate line" aria-label="Copy estimate line" onClick={copy}>{copied ? <Check size={16} /> : <Copy size={16} />}</Button></div>
+        <p className="calc-help-line calc-help-flat">F1 is a judgment estimate. After 7 similar finished pieces of work, use the Full SLICE forecast for a measured range.</p>
+        <Button onClick={() => onContinue(answers, overrides)}>Continue in Full SLICE forecast<ArrowRight size={16} /></Button>
+      </div>}
     </section>
   </div>;
 }

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { classificationWarnings, comparableHistory, conformance, coverage, dateValue, deliveryForecast, effectiveRisk, evidenceLevel, exampleCommitment, exampleHistory, EXAMPLE_COMMITMENT, EXAMPLE_EVIDENCE, EXAMPLE_FLOW, EXAMPLE_SCENARIOS, EXAMPLE_SLICE, flowStatus, measuredThroughput, monthAfter, nextPeriods, parseHistory, planning, scenarioOrderValid, timeBreakdown, total } from "@/lib/calculator";
+import { classificationWarnings, comparableHistory, conformance, coverage, dateValue, deliveryForecast, effectiveRisk, evidenceLevel, exampleCommitment, exampleHistory, externalLabel, EXAMPLE_COMMITMENT, EXAMPLE_EVIDENCE, EXAMPLE_FLOW, EXAMPLE_SCENARIOS, EXAMPLE_SLICE, flowStatus, measuredThroughput, monthAfter, nextPeriods, parseHistory, planning, scenarioOrderValid, timeBreakdown, total } from "@/lib/calculator";
 
 const sample = exampleHistory(new Date(2026, 9, 17, 12));
 const history = parseHistory(sample.csv);
@@ -140,6 +140,10 @@ describe("Dates follow the clock", () => {
     expect(conformance(commitment, level).text).toContain("Conformant");
     expect(flowStatus(EXAMPLE_FLOW).text).toBe("Room to start.");
     expect(externalReady(compared.comparable.length)).toContain("F2 (n=9)");
+  });
+  it("drops empty parts so a label never starts or ends with a separator", () => {
+    expect(externalLabel({ ...EXAMPLE_SLICE, title: "  " }, { ...EXAMPLE_COMMITMENT, when: "" }, "F1", 0)).toBe("Target · F1");
+    expect(externalLabel({ ...EXAMPLE_SLICE, title: "Sign-in" }, { ...EXAMPLE_COMMITMENT, when: "November 2026" }, "F2", 9)).toBe("Sign-in · Target · November 2026 · F2 (n=9)");
   });
 });
 

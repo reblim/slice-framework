@@ -87,10 +87,13 @@ export const planning: Record<Mode, { output: string; time: string }> = {
 export function classificationWarnings(slice: Slice): string[] {
   return [slice.mode === "3" ? "Mode 3 is always High risk for verification." : "", slice.size === "XL" ? "Split it before review, not after." : "", slice.itemType === "Improvement" && ["L", "XL"].includes(slice.size) ? "Customer-facing work with uncertain value, or work above the appetite, must be a Bet." : "", slice.mode === "E" ? "Forecast the experiment and its decision date, not the build." : ""].filter(Boolean);
 }
+export function joinedLabel(parts: Array<string | undefined>) {
+  return parts.map((part) => part?.trim() ?? "").filter(Boolean).join(" · ");
+}
 export function externalLabel(slice: Slice, commitment: Commitment, level: Level, count: number) {
   const evidence = level === "F2" ? `F2 (n=${count})` : level === "F0" ? "F0 · not estimated" : "F1";
   const accepted = level === "F1" && commitment.type === "Commitment" && commitment.riskAccepted;
-  return `${slice.title} · ${commitment.type} · ${commitment.when} · ${evidence}${accepted ? ` · F1 risk accepted by ${commitment.decider}` : ""}`;
+  return joinedLabel([slice.title, commitment.type, commitment.when, evidence, accepted ? `F1 risk accepted by ${commitment.decider}` : ""]);
 }
 export function conformance(commitment: Commitment, level: Level): { tone: "danger" | "success" | "warning"; text: string } {
   if (level === "F0" && commitment.type !== "Direction") return { tone: "danger", text: "An F0 slice has no forecast to date. Show it as a Direction." };
@@ -124,7 +127,7 @@ export function sliceCard(slice: Slice, commitment: Commitment, level: Level, ro
   const risk = effectiveRisk(slice);
   const scalar = (value: string) => JSON.stringify(value);
   const forecast = `${level}${level === "F2" ? ` (n=${rows.length})` : ""} · ${deliveryForecast(level, rows, scenarios)}${level === "F1" ? " · scenarios, not probabilities" : ""}`;
-  return `---\nid: SL-NEW\nroadmap_item: ${scalar(slice.item)}\ntitle: ${scalar(slice.title)}\nmode: ${scalar(slice.mode)}\nsize: ${slice.size}\nwork_type: ${slice.workType}\nforecast: ${scalar(forecast)}\nrisk: ${risk}\nai_leverage: ${slice.leverage}\nevidence_level: ${level}\nstate: ready\n---\n## Acceptance evidence\n${slice.acceptance}\n\n## Verification tier and reviewer\n${risk}: ${verification[risk]}\nReviewer: to be assigned\n\n## Forecast basis (reference class, range or scenarios, assumptions, external label)\nReference class: ${slice.size} / ${slice.workType} / Mode ${slice.mode} / ${slice.context}\n${forecast}\n${level === "F1" ? `Optimistic: ${total(scenarios.Optimistic)}; Expected: ${total(scenarios.Expected)}; Conservative: ${total(scenarios.Conservative)} working days\n` : ""}Assumptions: ${assumptions}\nExternal label: ${externalLabel(slice, commitment, level, rows.length)}${slice.itemType === "Bet" ? `\nOutcome · ${slice.item} · ${commitment.outcomeLevel} · ${commitment.criterion}\nDelivery and outcome are never merged into one confidence figure.` : ""}`;
+  return `---\nid: SL-NEW\nroadmap_item: ${scalar(slice.item)}\ntitle: ${scalar(slice.title)}\nmode: ${scalar(slice.mode)}\nsize: ${slice.size}\nwork_type: ${slice.workType}\nforecast: ${scalar(forecast)}\nrisk: ${risk}\nai_leverage: ${slice.leverage}\nevidence_level: ${level}\nstate: ready\n---\n## Acceptance evidence\n${slice.acceptance}\n\n## Verification tier and reviewer\n${risk}: ${verification[risk]}\nReviewer: to be assigned\n\n## Forecast basis (reference class, range or scenarios, assumptions, external label)\nReference class: ${slice.size} / ${slice.workType} / Mode ${slice.mode} / ${slice.context}\n${forecast}\n${level === "F1" ? `Optimistic: ${total(scenarios.Optimistic)}; Expected: ${total(scenarios.Expected)}; Conservative: ${total(scenarios.Conservative)} working days\n` : ""}Assumptions: ${assumptions}\nExternal label: ${externalLabel(slice, commitment, level, rows.length)}${slice.itemType === "Bet" ? `\n${joinedLabel(["Outcome", slice.item, commitment.outcomeLevel, commitment.criterion])}\nDelivery and outcome are never merged into one confidence figure.` : ""}`;
 }
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
