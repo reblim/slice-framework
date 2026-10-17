@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as ChangelogRouteImport } from './routes/changelog'
 import { Route as DecisionsRouteImport } from './routes/decisions'
 import { Route as AlphaPageRouteImport } from './routes/alpha.$page'
@@ -21,6 +22,11 @@ import { Route as SpecVersionRouteImport } from './routes/spec.$version'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculatorRoute = CalculatorRouteImport.update({
+  id: '/calculator',
+  path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChangelogRoute = ChangelogRouteImport.update({
@@ -61,6 +67,7 @@ const SpecVersionRoute = SpecVersionRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/calculator': typeof CalculatorRoute
   '/changelog': typeof ChangelogRoute
   '/decisions': typeof DecisionsRoute
   '/alpha/$page': typeof AlphaPageRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/calculator': typeof CalculatorRoute
   '/changelog': typeof ChangelogRoute
   '/decisions': typeof DecisionsRoute
   '/alpha/$page': typeof AlphaPageRoute
@@ -82,6 +90,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/calculator': typeof CalculatorRoute
   '/changelog': typeof ChangelogRoute
   '/decisions': typeof DecisionsRoute
   '/alpha/$page': typeof AlphaPageRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/calculator'
     | '/changelog'
     | '/decisions'
     | '/alpha/$page'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/calculator'
     | '/changelog'
     | '/decisions'
     | '/alpha/$page'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/calculator'
     | '/changelog'
     | '/decisions'
     | '/alpha/$page'
@@ -125,6 +137,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CalculatorRoute: typeof CalculatorRoute
   ChangelogRoute: typeof ChangelogRoute
   DecisionsRoute: typeof DecisionsRoute
   AlphaPageRoute: typeof AlphaPageRoute
@@ -141,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculator': {
+      id: '/calculator'
+      path: '/calculator'
+      fullPath: '/calculator'
+      preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/changelog': {
@@ -197,6 +217,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CalculatorRoute: CalculatorRoute,
   ChangelogRoute: ChangelogRoute,
   DecisionsRoute: DecisionsRoute,
   AlphaPageRoute: AlphaPageRoute,

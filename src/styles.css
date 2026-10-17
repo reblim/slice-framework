@@ -46,6 +46,8 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -62,6 +64,8 @@
 }
 
 :root {
+  --warning: oklch(0.52 0.13 70);
+  --success: oklch(0.46 0.11 155);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
@@ -98,6 +102,8 @@
 }
 
 .dark {
+  --warning: oklch(0.8 0.14 80);
+  --success: oklch(0.76 0.14 155);
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
@@ -172,4 +178,13 @@ code, pre, kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, mon
 .code-copy { position: absolute; top: 0.4rem; right: 0.4rem; padding: 0.35rem; border-radius: 6px; color: var(--muted-foreground); background: var(--background); border: 1px solid var(--border); }
 .code-copy:hover { color: var(--foreground); }
 .math-display { margin: 0 0 1rem; overflow-x: auto; overflow-y: hidden; }
+
+.calc-notice { border-left: 2px solid currentColor; padding: 0.2rem 0 0.2rem 0.75rem; font-size: 0.8125rem; line-height: 1.6; }
+.calc-danger { color: var(--destructive); }
+.calc-warning, .calc-warning-text { color: var(--warning); }
+.calc-success { color: var(--success); }
+.calc-segment-0 { color: var(--primary); }
+.calc-segment-1 { color: var(--chart-2); }
+.calc-segment-2 { color: var(--warning); }
+.calc-segment-3 { color: var(--muted-foreground); }
 

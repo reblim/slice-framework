@@ -17,6 +17,7 @@ describe("App routing", () => {
 
   it.each([
     ["/spec/0.3.1", "/spec/$version"],
+    ["/calculator", "/calculator"],
     ["/alpha/start-here", "/alpha/$page"],
     ["/changelog", "/changelog"],
     ["/decisions", "/decisions"],
@@ -40,8 +41,9 @@ describe("App routing", () => {
 });
 
 describe("Research discovery", () => {
-  it("has no documents while the research folder is empty", () => {
-    expect(listDocs("research")).toEqual([]);
+  it("discovers the actual research markdown registry", () => {
+    const sources = import.meta.glob("/src/content/research/*.md", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
+    expect(listDocs("research")).toEqual(documentsInFolder(sources, "research"));
   });
 
   it("lists every research markdown document using its first heading", () => {
