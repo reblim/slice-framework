@@ -5,6 +5,8 @@ import katex from "katex";
 import "katex/dist/katex.min.css";
 import { isValidElement, useMemo, useRef, useState, type ReactNode } from "react";
 import { Check, Copy } from "lucide-react";
+import { useLocation } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
 
 function findLatexSource(children: ReactNode): string | null {
   const nodes = Array.isArray(children) ? children : [children];
@@ -39,24 +41,31 @@ function CodeBlock({ children }: { children?: ReactNode }) {
   const ref = useRef<HTMLPreElement>(null);
   const [copied, setCopied] = useState(false);
   const copy = async () => {
-    await navigator.clipboard.writeText(ref.current?.innerText ?? "");
+    try { await navigator.clipboard.writeText(ref.current?.innerText ?? ""); }
+    catch { if (ref.current) { const range = document.createRange(); range.selectNodeContents(ref.current); const selection = window.getSelection(); selection?.removeAllRanges(); selection?.addRange(range); } return; }
     setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    setTimeout(() => setCopied(false), 2000);
   };
   return (
     <div className="code-block">
-      <button type="button" onClick={copy} className="code-copy" aria-label="Copy code">
-        {copied ? <Check size={14} /> : <Copy size={14} />}
-      </button>
+      <div className="code-header"><span>{Array.isArray(children) ? "" : isValidElement(children) ? ((children.props as { className?: string }).className?.replace("language-", "") ?? "text") : "text"}</span><div className="flex items-center gap-2"><span role="status">{copied ? "Copied" : ""}</span><Button type="button" variant="ghost" size="icon" onClick={copy} className="code-copy" aria-label="Copy code" title="Copy code">{copied ? <Check size={14} /> : <Copy size={14} />}</Button></div></div>
       <pre ref={ref}>{children}</pre>
     </div>
   );
 }
 
 export function Markdown({ source }: { source: string }) {
+  const { pathname } = useLocation();
+  const eyebrow = pathname.startsWith("/spec") ? "SPECIFICATION" : pathname.startsWith("/research") ? "RESEARCH" : pathname === "/changelog" || pathname === "/decisions" ? "HISTORY" : "ALPHA KIT";
   return (
     <div className="prose-doc">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]} components={{ pre: Pre }}>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]} components={{
+        pre: Pre,
+        h1: ({ children, ...props }) => <><p className="article-eyebrow">{eyebrow}</p><h1 {...props}>{children}</h1></>,
+        table: ({ children }) => <div className="table-scroll"><table>{children}</table></div>,
+        blockquote: ({ children }) => <blockquote className="article-callout">{children}</blockquote>,
+        strong: ({ children }) => <strong className={typeof children === "string" && /^(Public alpha|Archived version)\.$/.test(children) ? "callout-label" : undefined}>{children}</strong>,
+      }}>
         {source}
       </ReactMarkdown>
     </div>
