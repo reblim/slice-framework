@@ -3,7 +3,8 @@ import { Calculator } from "@/components/calculator/Calculator";
 import { SITE_NAME, canonicalUrl } from "@/config";
 
 const title = `Calculator · ${SITE_NAME}`;
-const description = "Estimate a feature in one minute: AI build time plus review, decisions and waiting. Or forecast from your team's own history.";
+const description =
+  "Estimate a feature in one minute: AI build time plus review, decisions and waiting. Or forecast from your team's own history.";
 const url = canonicalUrl("/calculator");
 
 export const Route = createFileRoute("/calculator")({

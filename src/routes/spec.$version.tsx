@@ -17,7 +17,10 @@ export const Route = createFileRoute("/spec/$version")({
         { title: `${SITE_NAME} spec v${params.version}` },
         { name: "description", content: `${SITE_NAME} specification, version ${params.version}.` },
         { property: "og:title", content: `${SITE_NAME} spec v${params.version}` },
-        { property: "og:description", content: `${SITE_NAME} specification, version ${params.version}.` },
+        {
+          property: "og:description",
+          content: `${SITE_NAME} specification, version ${params.version}.`,
+        },
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
       ],
@@ -39,7 +42,9 @@ function SpecPage() {
       {version.status === "archived" && (
         <div role="note" className="archive-callout">
           <strong>Archived version.</strong>
-          <Link to="/spec/$version" params={{ version: currentVersion.id }}>Go to the current version ({currentVersion.label})</Link>
+          <Link to="/spec/$version" params={{ version: currentVersion.id }}>
+            Go to the current version ({currentVersion.label})
+          </Link>
         </div>
       )}
       <Markdown source={md} />

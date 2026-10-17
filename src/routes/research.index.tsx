@@ -35,7 +35,9 @@ function ResearchIndex() {
         <ul className="research-list">
           {documents.map(({ page, title, description, date, author }) => (
             <li key={page}>
-              <Link to="/research/$page" params={{ page }} className="research-title">{title}</Link>
+              <Link to="/research/$page" params={{ page }} className="research-title">
+                {title}
+              </Link>
               {description ? <p className="research-desc">{description}</p> : null}
               <p className="research-meta">{[date, author].filter(Boolean).join(" · ")}</p>
             </li>

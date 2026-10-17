@@ -1,44 +1,83 @@
 export type Range = { low: number; high: number };
-export type FeatureKey = "authentication" | "payments" | "settings" | "admin" | "search" | "email" | "upload" | "mobile" | "api" | "database" | "integration" | "import" | "reports" | "ai" | "infra" | "bug" | "refactor" | "performance" | "other";
+export type FeatureKey =
+  | "authentication"
+  | "payments"
+  | "settings"
+  | "admin"
+  | "search"
+  | "email"
+  | "upload"
+  | "mobile"
+  | "api"
+  | "database"
+  | "integration"
+  | "import"
+  | "reports"
+  | "ai"
+  | "infra"
+  | "bug"
+  | "refactor"
+  | "performance"
+  | "other";
 export type BuildKey = "half-day" | "day" | "two-three" | "week" | "bigger";
 export type QuickRisk = "Low" | "Medium" | "High";
 export type DecisionKey = "clear" | "few" | "big";
 export type ExternalKey = "none" | "one" | "several";
 
 export const FEATURE_GROUPS: { label: string; features: { key: FeatureKey; label: string }[] }[] = [
-  { label: "Product", features: [
-    { key: "authentication", label: "Authentication (sign-up, sign-in, password reset)" },
-    { key: "payments", label: "Payments or checkout" },
-    { key: "settings", label: "Settings or profile page" },
-    { key: "admin", label: "Admin dashboard" },
-    { key: "search", label: "Search" },
-    { key: "email", label: "Email or notifications" },
-    { key: "upload", label: "File upload" },
-    { key: "mobile", label: "Mobile app screen" },
-  ] },
-  { label: "Data and platform", features: [
-    { key: "api", label: "API or backend endpoint" },
-    { key: "database", label: "Database change or migration" },
-    { key: "integration", label: "Third-party integration" },
-    { key: "import", label: "Data import or export" },
-    { key: "reports", label: "Reports or analytics" },
-    { key: "ai", label: "AI feature (uses a language model)" },
-    { key: "infra", label: "Infrastructure or deployment (hosting, CI, monitoring)" },
-  ] },
-  { label: "Maintenance", features: [
-    { key: "bug", label: "Bug fix" },
-    { key: "refactor", label: "Refactor or upgrade" },
-    { key: "performance", label: "Performance improvement" },
-  ] },
+  {
+    label: "Product",
+    features: [
+      { key: "authentication", label: "Authentication (sign-up, sign-in, password reset)" },
+      { key: "payments", label: "Payments or checkout" },
+      { key: "settings", label: "Settings or profile page" },
+      { key: "admin", label: "Admin dashboard" },
+      { key: "search", label: "Search" },
+      { key: "email", label: "Email or notifications" },
+      { key: "upload", label: "File upload" },
+      { key: "mobile", label: "Mobile app screen" },
+    ],
+  },
+  {
+    label: "Data and platform",
+    features: [
+      { key: "api", label: "API or backend endpoint" },
+      { key: "database", label: "Database change or migration" },
+      { key: "integration", label: "Third-party integration" },
+      { key: "import", label: "Data import or export" },
+      { key: "reports", label: "Reports or analytics" },
+      { key: "ai", label: "AI feature (uses a language model)" },
+      { key: "infra", label: "Infrastructure or deployment (hosting, CI, monitoring)" },
+    ],
+  },
+  {
+    label: "Maintenance",
+    features: [
+      { key: "bug", label: "Bug fix" },
+      { key: "refactor", label: "Refactor or upgrade" },
+      { key: "performance", label: "Performance improvement" },
+    ],
+  },
 ];
-export const FEATURES: { key: FeatureKey; label: string }[] = [...FEATURE_GROUPS.flatMap((group) => group.features), { key: "other", label: "Something else" }];
+export const FEATURES: { key: FeatureKey; label: string }[] = [
+  ...FEATURE_GROUPS.flatMap((group) => group.features),
+  { key: "other", label: "Something else" },
+];
 export const FEATURE_GUIDANCE: Partial<Record<FeatureKey, { risk?: QuickRisk; note: string }>> = {
   authentication: { risk: "High", note: "Logins and payments are always high risk." },
   payments: { risk: "High", note: "Logins and payments are always high risk." },
-  database: { risk: "High", note: "Migrations are hard to undo: test on a copy of real data first." },
-  ai: { risk: "Medium", note: "Model output varies: check it on real examples before you call it done." },
+  database: {
+    risk: "High",
+    note: "Migrations are hard to undo: test on a copy of real data first.",
+  },
+  ai: {
+    risk: "Medium",
+    note: "Model output varies: check it on real examples before you call it done.",
+  },
   infra: { risk: "Medium", note: "Plan how to roll back." },
-  bug: { note: "If the cause is still unknown, choose 'Big open questions' or time-box an investigation first." },
+  bug: {
+    note: "If the cause is still unknown, choose 'Big open questions' or time-box an investigation first.",
+  },
   refactor: { note: "Keep it separate from feature work so review stays small." },
 };
 export const BUILD_OPTIONS: { key: BuildKey; label: string; range: Range | null }[] = [
@@ -48,10 +87,32 @@ export const BUILD_OPTIONS: { key: BuildKey; label: string; range: Range | null 
   { key: "week", label: "About a week", range: { low: 4, high: 6 } },
   { key: "bigger", label: "More than a week", range: null },
 ];
-export const RISK_OPTIONS: { key: QuickRisk; label: string; description: string; range: Range; note?: string }[] = [
-  { key: "Low", label: "Low", description: "Easy to undo, no sensitive data", range: { low: 0.25, high: 0.5 } },
-  { key: "Medium", label: "Medium", description: "Users see it; needs a full review", range: { low: 0.5, high: 2 } },
-  { key: "High", label: "High", description: "Money, logins, personal data, or hard to undo", range: { low: 2, high: 5 }, note: "Needs review by someone who didn't build it. Tip: a managed provider (hosted payments, managed auth) lowers the risk." },
+export const RISK_OPTIONS: {
+  key: QuickRisk;
+  label: string;
+  description: string;
+  range: Range;
+  note?: string;
+}[] = [
+  {
+    key: "Low",
+    label: "Low",
+    description: "Easy to undo, no sensitive data",
+    range: { low: 0.25, high: 0.5 },
+  },
+  {
+    key: "Medium",
+    label: "Medium",
+    description: "Users see it; needs a full review",
+    range: { low: 0.5, high: 2 },
+  },
+  {
+    key: "High",
+    label: "High",
+    description: "Money, logins, personal data, or hard to undo",
+    range: { low: 2, high: 5 },
+    note: "Needs review by someone who didn't build it. Tip: a managed provider (hosted payments, managed auth) lowers the risk.",
+  },
 ];
 export const DECISION_OPTIONS: { key: DecisionKey; label: string; range: Range | null }[] = [
   { key: "clear", label: "Nothing, it's clear", range: { low: 0, high: 0.5 } },
@@ -89,8 +150,22 @@ export function externalRange(key: ExternalKey, overrides: RangeOverrides): Rang
   return overrides.external[key] ?? EXTERNAL_OPTIONS.find((option) => option.key === key)!.range;
 }
 
-export type QuickAnswers = { feature: FeatureKey; featureText: string; build: BuildKey | ""; risk: QuickRisk | ""; decision: DecisionKey | ""; external: ExternalKey | "" };
-export const EMPTY_QUICK: QuickAnswers = { feature: "authentication", featureText: "", build: "", risk: "High", decision: "", external: "" };
+export type QuickAnswers = {
+  feature: FeatureKey;
+  featureText: string;
+  build: BuildKey | "";
+  risk: QuickRisk | "";
+  decision: DecisionKey | "";
+  external: ExternalKey | "";
+};
+export const EMPTY_QUICK: QuickAnswers = {
+  feature: "authentication",
+  featureText: "",
+  build: "",
+  risk: "High",
+  decision: "",
+  external: "",
+};
 
 export const roundHalf = (value: number) => Math.round(value * 2) / 2;
 export const midpoint = (range: Range) => (range.low + range.high) / 2;
@@ -99,10 +174,17 @@ export type QuickResult =
   | { kind: "incomplete" }
   | { kind: "too-big" }
   | { kind: "undecided" }
-  | { kind: "ready"; parts: { label: string; range: Range }[]; low: number; high: number; buildPercent: number };
+  | {
+      kind: "ready";
+      parts: { label: string; range: Range }[];
+      low: number;
+      high: number;
+      buildPercent: number;
+    };
 
 export function quickResult(answers: QuickAnswers, overrides: RangeOverrides): QuickResult {
-  if (!answers.build || !answers.risk || !answers.decision || !answers.external) return { kind: "incomplete" };
+  if (!answers.build || !answers.risk || !answers.decision || !answers.external)
+    return { kind: "incomplete" };
   if (answers.feature === "other" && !answers.featureText.trim()) return { kind: "incomplete" };
   const build = buildRange(answers.build, overrides);
   if (!build) return { kind: "too-big" };
@@ -117,14 +199,23 @@ export function quickResult(answers: QuickAnswers, overrides: RangeOverrides): Q
   const low = roundHalf(parts.reduce((acc, part) => acc + part.range.low, 0));
   const high = roundHalf(parts.reduce((acc, part) => acc + part.range.high, 0));
   const totalMid = parts.reduce((acc, part) => acc + midpoint(part.range), 0);
-  return { kind: "ready", parts, low, high, buildPercent: totalMid ? Math.round(midpoint(build) / totalMid * 100) : 0 };
+  return {
+    kind: "ready",
+    parts,
+    low,
+    high,
+    buildPercent: totalMid ? Math.round((midpoint(build) / totalMid) * 100) : 0,
+  };
 }
 
 export function quickFeatureName(answers: QuickAnswers): string {
   if (answers.feature === "other") return answers.featureText.trim();
   return FEATURES.find((feature) => feature.key === answers.feature)?.label ?? "";
 }
-export function quickCopyLine(answers: QuickAnswers, result: Extract<QuickResult, { kind: "ready" }>): string {
+export function quickCopyLine(
+  answers: QuickAnswers,
+  result: Extract<QuickResult, { kind: "ready" }>,
+): string {
   return `${quickFeatureName(answers)} · Target · F1 · ${result.low}–${result.high} working days`;
 }
 /** Maps the four quick parts onto the F1 scenario columns: best = lower bounds, likely = midpoints, worst = upper bounds. */
@@ -135,7 +226,11 @@ export function quickScenarios(result: Extract<QuickResult, { kind: "ready" }>) 
     decision: pick(result.parts[2]!.range),
     external: pick(result.parts[3]!.range),
   });
-  return { "Best case": column((range) => range.low), Likely: column(midpoint), "Worst case": column((range) => range.high) };
+  return {
+    "Best case": column((range) => range.low),
+    Likely: column(midpoint),
+    "Worst case": column((range) => range.high),
+  };
 }
 
 const STORAGE_KEY = "slice-calculator-quick-ranges";
@@ -144,12 +239,30 @@ export function loadOverrides(): RangeOverrides {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return NO_OVERRIDES;
     const parsed = JSON.parse(raw) as RangeOverrides;
-    return { build: parsed.build ?? {}, risk: parsed.risk ?? {}, decision: parsed.decision ?? {}, external: parsed.external ?? {} };
+    return {
+      build: parsed.build ?? {},
+      risk: parsed.risk ?? {},
+      decision: parsed.decision ?? {},
+      external: parsed.external ?? {},
+    };
   } catch {
     return NO_OVERRIDES;
   }
 }
-const CALENDAR_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const CALENDAR_MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 export function calendarISO(today: Date): string {
   const month = String(today.getMonth() + 1).padStart(2, "0");
@@ -178,13 +291,21 @@ export function formatCalendarDate(date: Date): string {
   return `${date.getDate()} ${CALENDAR_MONTHS[date.getMonth()]} ${date.getFullYear()}`;
 }
 
-export function liveRange(startISO: string, low: number, high: number): { from: string; to: string } | null {
+export function liveRange(
+  startISO: string,
+  low: number,
+  high: number,
+): { from: string; to: string } | null {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(startISO)) return null;
   const [year, month, day] = startISO.split("-").map(Number);
   if (!year || !month || !day) return null;
   const start = new Date(year, month - 1, day);
-  if (start.getFullYear() !== year || start.getMonth() !== month - 1 || start.getDate() !== day) return null;
-  return { from: formatCalendarDate(addWorkingDays(start, low)), to: formatCalendarDate(addWorkingDays(start, high)) };
+  if (start.getFullYear() !== year || start.getMonth() !== month - 1 || start.getDate() !== day)
+    return null;
+  return {
+    from: formatCalendarDate(addWorkingDays(start, low)),
+    to: formatCalendarDate(addWorkingDays(start, high)),
+  };
 }
 
 export function saveOverrides(overrides: RangeOverrides) {
@@ -195,4 +316,11 @@ export function saveOverrides(overrides: RangeOverrides) {
   }
 }
 
-export const QUICK_EXAMPLE: QuickAnswers = { feature: "authentication", featureText: "", build: "day", risk: "High", decision: "few", external: "none" };
+export const QUICK_EXAMPLE: QuickAnswers = {
+  feature: "authentication",
+  featureText: "",
+  build: "day",
+  risk: "High",
+  decision: "few",
+  external: "none",
+};

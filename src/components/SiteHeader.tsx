@@ -9,7 +9,9 @@ function ThemeToggle() {
   const [dark, setDark] = useState(false);
   useEffect(() => {
     const stored = localStorage.getItem("theme");
-    const d = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const d = stored
+      ? stored === "dark"
+      : window.matchMedia("(prefers-color-scheme: dark)").matches;
     setDark(d);
     document.documentElement.classList.toggle("dark", d);
   }, []);
@@ -20,7 +22,15 @@ function ThemeToggle() {
     localStorage.setItem("theme", d ? "dark" : "light");
   };
   return (
-    <Button type="button" variant="ghost" size="icon" onClick={toggle} className="header-icon shrink-0" aria-label="Toggle theme" title={dark ? "Switch to light mode" : "Switch to dark mode"}>
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon"
+      onClick={toggle}
+      className="header-icon shrink-0"
+      aria-label="Toggle theme"
+      title={dark ? "Switch to light mode" : "Switch to dark mode"}
+    >
       {dark ? <Sun size={16} /> : <Moon size={16} />}
     </Button>
   );
@@ -32,16 +42,45 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
   return (
     <header className="site-header">
       <div className="header-inner">
-        <div className="header-brand"><Link to="/" className="site-logo">{SITE_NAME}</Link><span className="alpha-badge">alpha</span></div>
+        <div className="header-brand">
+          <Link to="/" className="site-logo">
+            {SITE_NAME}
+          </Link>
+          <span className="alpha-badge">alpha</span>
+        </div>
         <nav aria-label="Main navigation" className="header-nav" data-path={pathname}>
-          <Link to="/spec/$version" params={{ version: currentVersion.id }} className={nav}>Spec</Link>
-          <Link to="/alpha/$page" params={{ page: "quick-start" }} className={nav}>Alpha kit</Link>
-          <Link to="/research" className={nav}>Research</Link>
-          <Link to="/changelog" className={nav}>Changelog</Link>
-          <Link to="/decisions" className={nav}>Decisions</Link>
-          <Link to="/calculator" className={nav}>Calculator</Link>
+          <Link to="/spec/$version" params={{ version: currentVersion.id }} className={nav}>
+            Spec
+          </Link>
+          <Link to="/alpha/$page" params={{ page: "quick-start" }} className={nav}>
+            Alpha kit
+          </Link>
+          <Link to="/research" className={nav}>
+            Research
+          </Link>
+          <Link to="/changelog" className={nav}>
+            Changelog
+          </Link>
+          <Link to="/decisions" className={nav}>
+            Decisions
+          </Link>
+          <Link to="/calculator" className={nav}>
+            Calculator
+          </Link>
         </nav>
-        <div className="header-tools"><Button variant="ghost" size="icon" className="header-icon lg:hidden" aria-label="Open navigation" title="Open navigation" onClick={onMenu}><Menu size={16} /></Button><ThemeToggle /></div>
+        <div className="header-tools">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="header-icon lg:hidden"
+            aria-label="Open navigation"
+            title="Open navigation"
+            onClick={onMenu}
+          >
+            <Menu size={16} />
+          </Button>
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

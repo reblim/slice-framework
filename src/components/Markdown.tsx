@@ -24,16 +24,22 @@ function tableClass(children: ReactNode): string {
     for (const row of Array.isArray(rows) ? rows : [rows]) {
       if (!isValidElement(row)) continue;
       const cells = (row.props as { children?: ReactNode }).children;
-      for (const cell of Array.isArray(cells) ? cells : [cells]) labels.push(collectText(cell).trim());
+      for (const cell of Array.isArray(cells) ? cells : [cells])
+        labels.push(collectText(cell).trim());
     }
   }
   if (labels[0] === "#") return "table-decisions";
-  if (labels[0] === "Version" && labels[1] === "Status" && labels[2] === "Author") return "table-versions";
+  if (labels[0] === "Version" && labels[1] === "Status" && labels[2] === "Author")
+    return "table-versions";
   return "";
 }
 
 function Table({ children }: { children?: ReactNode }) {
-  return <div className="table-scroll" tabIndex={0}><table className={tableClass(children)}>{children}</table></div>;
+  return (
+    <div className="table-scroll" tabIndex={0}>
+      <table className={tableClass(children)}>{children}</table>
+    </div>
+  );
 }
 
 function findLatexSource(children: ReactNode): string | null {
@@ -44,7 +50,8 @@ function findLatexSource(children: ReactNode): string | null {
     if (typeof props.className === "string" && props.className.includes("language-latex")) {
       const inner = props.children;
       if (typeof inner === "string") return inner;
-      if (Array.isArray(inner) && inner.every((part) => typeof part === "string")) return inner.join("");
+      if (Array.isArray(inner) && inner.every((part) => typeof part === "string"))
+        return inner.join("");
       return null;
     }
   }
@@ -69,31 +76,93 @@ function CodeBlock({ children }: { children?: ReactNode }) {
   const ref = useRef<HTMLPreElement>(null);
   const [copied, setCopied] = useState(false);
   const copy = async () => {
-    try { await navigator.clipboard.writeText(ref.current?.innerText ?? ""); }
-    catch { if (ref.current) { const range = document.createRange(); range.selectNodeContents(ref.current); const selection = window.getSelection(); selection?.removeAllRanges(); selection?.addRange(range); } return; }
+    try {
+      await navigator.clipboard.writeText(ref.current?.innerText ?? "");
+    } catch {
+      if (ref.current) {
+        const range = document.createRange();
+        range.selectNodeContents(ref.current);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
+      return;
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
   return (
     <div className="code-block">
-      <div className="code-header"><span>{Array.isArray(children) ? "" : isValidElement(children) ? ((children.props as { className?: string }).className?.replace("language-", "") ?? "text") : "text"}</span><div className="flex items-center gap-2"><span role="status">{copied ? "Copied" : ""}</span><Button type="button" variant="ghost" size="icon" onClick={copy} className="code-copy" aria-label="Copy code" title="Copy code">{copied ? <Check size={14} /> : <Copy size={14} />}</Button></div></div>
-      <pre ref={ref} tabIndex={0}>{children}</pre>
+      <div className="code-header">
+        <span>
+          {Array.isArray(children)
+            ? ""
+            : isValidElement(children)
+              ? ((children.props as { className?: string }).className?.replace("language-", "") ??
+                "text")
+              : "text"}
+        </span>
+        <div className="flex items-center gap-2">
+          <span role="status">{copied ? "Copied" : ""}</span>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={copy}
+            className="code-copy"
+            aria-label="Copy code"
+            title="Copy code"
+          >
+            {copied ? <Check size={14} /> : <Copy size={14} />}
+          </Button>
+        </div>
+      </div>
+      <pre ref={ref} tabIndex={0}>
+        {children}
+      </pre>
     </div>
   );
 }
 
 export function Markdown({ source }: { source: string }) {
   const { pathname } = useLocation();
-  const eyebrow = pathname.startsWith("/spec") ? "SPECIFICATION" : pathname.startsWith("/research") ? "RESEARCH" : pathname === "/changelog" || pathname === "/decisions" ? "HISTORY" : "ALPHA KIT";
+  const eyebrow = pathname.startsWith("/spec")
+    ? "SPECIFICATION"
+    : pathname.startsWith("/research")
+      ? "RESEARCH"
+      : pathname === "/changelog" || pathname === "/decisions"
+        ? "HISTORY"
+        : "ALPHA KIT";
   return (
     <div className="prose-doc">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]} components={{
-        pre: Pre,
-        h1: ({ children, ...props }) => <><p className="article-eyebrow">{eyebrow}</p><h1 {...props}>{children}</h1></>,
-        table: Table,
-        blockquote: ({ children }) => <blockquote className="article-callout">{children}</blockquote>,
-        strong: ({ children }) => <strong className={typeof children === "string" && /^(Public alpha|Archived version)\.$/.test(children) ? "callout-label" : undefined}>{children}</strong>,
-      }}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeSlug]}
+        components={{
+          pre: Pre,
+          h1: ({ children, ...props }) => (
+            <>
+              <p className="article-eyebrow">{eyebrow}</p>
+              <h1 {...props}>{children}</h1>
+            </>
+          ),
+          table: Table,
+          blockquote: ({ children }) => (
+            <blockquote className="article-callout">{children}</blockquote>
+          ),
+          strong: ({ children }) => (
+            <strong
+              className={
+                typeof children === "string" && /^(Public alpha|Archived version)\.$/.test(children)
+                  ? "callout-label"
+                  : undefined
+              }
+            >
+              {children}
+            </strong>
+          ),
+        }}
+      >
         {source}
       </ReactMarkdown>
     </div>

@@ -1,23 +1,50 @@
 import { describe, expect, it } from "vitest";
-import { addWorkingDays, EMPTY_QUICK, liveRange, NO_OVERRIDES, QUICK_EXAMPLE, quickCopyLine, quickResult, quickScenarios, roundHalf, type RangeOverrides } from "@/lib/quick-estimate";
+import {
+  addWorkingDays,
+  EMPTY_QUICK,
+  liveRange,
+  NO_OVERRIDES,
+  QUICK_EXAMPLE,
+  quickCopyLine,
+  quickResult,
+  quickScenarios,
+  roundHalf,
+  type RangeOverrides,
+} from "@/lib/quick-estimate";
 
 describe("Quick estimate", () => {
-  it("is incomplete on an empty form", () => expect(quickResult(EMPTY_QUICK, NO_OVERRIDES).kind).toBe("incomplete"));
-  it("requires a name for Something else", () => expect(quickResult({ ...QUICK_EXAMPLE, feature: "other" }, NO_OVERRIDES).kind).toBe("incomplete"));
-  it("blocks slices bigger than a week", () => expect(quickResult({ ...QUICK_EXAMPLE, build: "bigger" }, NO_OVERRIDES).kind).toBe("too-big"));
-  it("is not estimated with big open questions", () => expect(quickResult({ ...QUICK_EXAMPLE, decision: "big" }, NO_OVERRIDES).kind).toBe("undecided"));
+  it("is incomplete on an empty form", () =>
+    expect(quickResult(EMPTY_QUICK, NO_OVERRIDES).kind).toBe("incomplete"));
+  it("requires a name for Something else", () =>
+    expect(quickResult({ ...QUICK_EXAMPLE, feature: "other" }, NO_OVERRIDES).kind).toBe(
+      "incomplete",
+    ));
+  it("blocks slices bigger than a week", () =>
+    expect(quickResult({ ...QUICK_EXAMPLE, build: "bigger" }, NO_OVERRIDES).kind).toBe("too-big"));
+  it("is not estimated with big open questions", () =>
+    expect(quickResult({ ...QUICK_EXAMPLE, decision: "big" }, NO_OVERRIDES).kind).toBe(
+      "undecided",
+    ));
   it("sums lower and upper bounds for the authentication example", () => {
     const result = quickResult(QUICK_EXAMPLE, NO_OVERRIDES);
     if (result.kind !== "ready") throw new Error("expected ready");
     expect([result.low, result.high]).toEqual([3.5, 9.5]);
     expect(result.buildPercent).toBe(15);
-    expect(result.parts.map((part) => part.label)).toEqual(["Build (AI)", "Review & testing", "Decisions", "Waiting"]);
+    expect(result.parts.map((part) => part.label)).toEqual([
+      "Build (AI)",
+      "Review & testing",
+      "Decisions",
+      "Waiting",
+    ]);
   });
-  it("rounds totals to half days", () => expect([roundHalf(3.26), roundHalf(3.24)]).toEqual([3.5, 3]));
+  it("rounds totals to half days", () =>
+    expect([roundHalf(3.26), roundHalf(3.24)]).toEqual([3.5, 3]));
   it("builds the copyable line", () => {
     const result = quickResult(QUICK_EXAMPLE, NO_OVERRIDES);
     if (result.kind !== "ready") throw new Error("expected ready");
-    expect(quickCopyLine(QUICK_EXAMPLE, result)).toBe("Authentication (sign-up, sign-in, password reset) · Target · F1 · 3.5–9.5 working days");
+    expect(quickCopyLine(QUICK_EXAMPLE, result)).toBe(
+      "Authentication (sign-up, sign-in, password reset) · Target · F1 · 3.5–9.5 working days",
+    );
   });
   it("maps parts to F1 scenarios as lower, midpoint and upper bounds", () => {
     const result = quickResult(QUICK_EXAMPLE, NO_OVERRIDES);
@@ -29,7 +56,10 @@ describe("Quick estimate", () => {
     });
   });
   it("rounds the live window up to weekdays", () => {
-    expect(liveRange("2026-10-16", 3.5, 9.5)).toEqual({ from: "21 October 2026", to: "29 October 2026" });
+    expect(liveRange("2026-10-16", 3.5, 9.5)).toEqual({
+      from: "21 October 2026",
+      to: "29 October 2026",
+    });
     const saturday = addWorkingDays(new Date(2026, 9, 17), 1);
     expect(saturday.getDay()).toBe(1);
   });

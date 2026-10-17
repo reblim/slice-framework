@@ -9,7 +9,14 @@ const base = `http://127.0.0.1:${port}`;
 const installedChromium = "/opt/pw-browsers/chromium";
 const chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 
-const pages = ["/", "/spec/0.3.2", "/alpha/quick-start", "/research", "/decisions", "/calculator"] as const;
+const pages = [
+  "/",
+  "/spec/0.3.2",
+  "/alpha/quick-start",
+  "/research",
+  "/decisions",
+  "/calculator",
+] as const;
 
 async function waitForServer() {
   const started = Date.now();
@@ -45,7 +52,9 @@ async function audit(page: Page, path: string, theme: "light" | "dark", tab?: st
 
 async function expectClean(page: Page) {
   const results = await new AxeBuilder({ page }).analyze();
-  const serious = results.violations.filter((violation) => violation.impact === "serious" || violation.impact === "critical");
+  const serious = results.violations.filter(
+    (violation) => violation.impact === "serious" || violation.impact === "critical",
+  );
   expect(serious.map((violation) => `${violation.id}: ${violation.help}`)).toEqual([]);
 }
 
@@ -54,9 +63,13 @@ describe("accessibility", () => {
   let browser: Browser;
 
   beforeAll(async () => {
-    server = spawn("bun", ["x", "vite", "dev", "--port", String(port), "--strictPort", "--host", "127.0.0.1"], {
-      stdio: "ignore",
-    });
+    server = spawn(
+      "bun",
+      ["x", "vite", "dev", "--port", String(port), "--strictPort", "--host", "127.0.0.1"],
+      {
+        stdio: "ignore",
+      },
+    );
     await waitForServer();
     browser = await chromium.launch({
       headless: true,
