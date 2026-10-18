@@ -169,7 +169,13 @@ export function DocumentationShell({ children }: { children: ReactNode }) {
         </aside>
       </div>
       <footer className="site-footer">
-        <span>{SITE_NAME} · Public alpha · Milber Ferreira, 2026</span>
+        <span>
+          {SITE_NAME} · Public alpha ·{" "}
+          <a href="https://milberferreira.com/" target="_blank" rel="noopener noreferrer">
+            Milber Ferreira
+          </a>
+          {", 2026"}
+        </span>
         <Link to="/changelog">Changelog</Link>
       </footer>
       <Sheet open={open} onOpenChange={setOpen}>
