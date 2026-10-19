@@ -154,6 +154,7 @@ code,pre,kbd,.font-mono,.mono-label,.article-eyebrow,.status-badge,.alpha-badge 
 .toc-nested { padding-left:12px; }
 .site-footer { max-width:1440px; margin:auto; border-top:1px solid var(--border); padding:24px; display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; font-size:13px; color:var(--muted-foreground); }
 .site-footer a { color:var(--link); }
+.site-footer span a { text-decoration:underline; text-underline-offset:3px; }
 .docs-drawer { width: min(320px,90vw); overflow-y:auto; background:var(--background); }
 .prose-doc { color:var(--body); font-size:16px; line-height:28px; max-width:72ch; }
 .prose-doc h1 { font-size:30px; line-height:36px; font-weight:600; letter-spacing:-.025em; margin:0 0 20px; }
